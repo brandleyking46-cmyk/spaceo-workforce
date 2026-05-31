@@ -1,0 +1,3978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="theme-color" content="#0E0F0C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Spaceó">
+<link rel="manifest" href="data:application/json,{%22name%22:%22Spac%C3%A9%C3%B3+Interiors%22,%22short_name%22:%22Spac%C3%A9%C3%B3%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230E0F0C%22,%22theme_color%22:%22%230E0F0C%22}">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Spaceó Interiors LLC — Workforce Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --c-black: #0E0F0C;
+  --c-white: #F7F6F2;
+  --c-green: #C0201A;
+  --c-green-light: #FDE8E7;
+  --c-green-mid: #E0302A;
+  --c-amber: #D97706;
+  --c-amber-light: #FEF3C7;
+  --c-red: #DC2626;
+  --c-red-light: #FEE2E2;
+  --c-gray-50: #F9F9F7;
+  --c-gray-100: #EFEFEB;
+  --c-gray-200: #DEDED8;
+  --c-gray-400: #9B9B92;
+  --c-gray-600: #5A5A54;
+  --c-gray-800: #2C2C28;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 2px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body { font-family: var(--font-body); background: var(--c-gray-50); color: var(--c-black); overflow-x: hidden; }
+
+/* ─── VIEW SYSTEM ─── */
+.view { display: none; min-height: 100vh; }
+.view.active { display: flex; flex-direction: column; }
+
+/* ─── LANDING ─── */
+#landing {
+  background: var(--c-black);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+#landing::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(192,32,26,0.18) 0%, transparent 70%);
+  top: -100px; right: -150px;
+  pointer-events: none;
+}
+.land-logo {
+  font-family: var(--font-head);
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--c-white);
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+.land-logo span { color: var(--c-green-mid); }
+.land-sub {
+  font-size: 14px;
+  color: var(--c-gray-400);
+  margin-bottom: 56px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.land-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 360px;
+}
+.land-card {
+  background: var(--c-gray-800);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: transform 0.18s, background 0.18s;
+  text-align: left;
+}
+.land-card:hover { transform: translateY(-2px); background: #363630; }
+.land-card:active { transform: scale(0.98); }
+.land-card-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  margin-bottom: 14px;
+}
+.land-card-icon.green { background: rgba(192,32,26,0.12); }
+.land-card-icon.amber { background: rgba(192,32,26,0.12); }
+.land-card h3 { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--c-white); margin-bottom: 4px; }
+.land-card p { font-size: 13px; color: var(--c-gray-400); line-height: 1.5; }
+
+/* ─── WORKER LOGIN ─── */
+#worker-login {
+  background: var(--c-black);
+  padding: 0;
+  justify-content: flex-end;
+}
+.wl-hero {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 56px 28px 24px;
+  flex-direction: column;
+}
+.wl-back {
+  color: var(--c-gray-400);
+  font-size: 22px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+.wl-hero-text { margin-top: auto; }
+.wl-hero-text h1 {
+  font-family: var(--font-head);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--c-white);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.wl-hero-text p { font-size: 14px; color: var(--c-gray-400); }
+.wl-form-sheet {
+  background: var(--c-gray-50);
+  border-radius: 28px 28px 0 0;
+  padding: 32px 24px 48px;
+}
+.wl-label { font-size: 12px; color: var(--c-gray-600); font-weight: 500; margin-bottom: 6px; display: block; letter-spacing: 0.04em; text-transform: uppercase; }
+.wl-select, .wl-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--c-gray-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--c-black);
+  background: #fff;
+  margin-bottom: 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.wl-select:focus, .wl-input:focus { border-color: var(--c-green); }
+.wl-select-wrap { position: relative; }
+.wl-select-wrap::after {
+  content: '▾';
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  color: var(--c-gray-400); pointer-events: none; font-size: 14px;
+}
+.pin-row { display: flex; gap: 12px; margin-bottom: 24px; justify-content: center; }
+.pin-digit {
+  width: 58px; height: 62px;
+  flex: none;
+  border: 1.5px solid var(--c-gray-200);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  color: var(--c-black);
+}
+.pin-digit:focus { border-color: var(--c-green); }
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  background: var(--c-green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-head);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: 0.02em;
+}
+.btn-primary:hover { background: #9e1a15; }
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled { background: var(--c-gray-200); color: var(--c-gray-400); cursor: not-allowed; }
+
+/* ─── WORKER CHECKIN ─── */
+#worker-checkin { background: var(--c-gray-50); }
+.wc-header {
+  background: var(--c-black);
+  padding: 64px 28px 48px;
+  position: relative;
+}
+.wc-header::after {
+  content: '';
+  position: absolute;
+  bottom: -32px; left: 0; right: 0;
+  height: 64px;
+  background: var(--c-gray-50);
+  border-radius: 32px 32px 0 0;
+  z-index: 0;
+}
+.wc-header-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.wc-name { font-family: var(--font-head); font-size: 32px; font-weight: 800; color: var(--c-white); margin-bottom: 8px; letter-spacing: -0.5px; }
+.wc-site { font-size: 13px; color: var(--c-gray-400); display: flex; align-items: center; gap: 8px; }
+.wc-site-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c-green-mid); flex-shrink: 0; }
+.wc-logout-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 5px 12px;
+  color: var(--c-gray-400);
+  font-size: 11px;
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-top: 4px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.wc-logout-btn:hover { background: rgba(255,255,255,0.14); color: var(--c-white); }
+.wc-body { padding: 52px 24px 24px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.wc-time-card {
+  background: var(--c-black);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wc-time { font-family: var(--font-head); font-size: 36px; font-weight: 800; color: var(--c-white); }
+.wc-date { font-size: 12px; color: var(--c-gray-400); margin-top: 2px; }
+.wc-status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-head);
+}
+.status-out { background: rgba(220,38,38,0.15); color: #ff6b6b; }
+.status-in { background: rgba(192,32,26,0.12); color: var(--c-green-mid); }
+
+.wc-gps-card {
+  background: #fff;
+  border: 1px solid var(--c-gray-200);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.gps-icon {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  background: var(--c-green-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.gps-title { font-size: 13px; font-weight: 600; color: var(--c-black); margin-bottom: 2px; }
+.gps-sub { font-size: 12px; color: var(--c-gray-400); }
+
+.checkin-big-btn {
+  background: #1A7A52;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(26,122,82,0.4);
+}
+.checkin-big-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(26,122,82,0.55); }
+.checkin-big-btn:active { transform: scale(0.98); }
+.checkin-big-btn.checked-in { background: #C0201A; box-shadow: 0 4px 24px rgba(192,32,26,0.4); }
+.checkin-big-btn.checked-in:hover { box-shadow: 0 8px 32px rgba(192,32,26,0.55); }
+.checkin-btn-inner { padding: 28px 24px; text-align: center; }
+.checkin-btn-icon { font-size: 36px; margin-bottom: 8px; }
+.checkin-btn-text { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: #fff; }
+.checkin-btn-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+.selfie-btn {
+  background: #fff;
+  border: 1.5px solid var(--c-gray-200);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  width: 100%;
+  text-align: left;
+}
+.selfie-btn:hover { border-color: var(--c-green); }
+.selfie-icon { font-size: 26px; }
+.selfie-text { font-size: 14px; font-weight: 500; color: var(--c-black); }
+.selfie-sub { font-size: 12px; color: var(--c-gray-400); }
+
+.wc-log-section { margin-top: 4px; }
+.wc-log-title { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--c-black); margin-bottom: 10px; }
+.log-entry {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--c-gray-100);
+}
+.log-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.log-dot.in { background: var(--c-green-mid); }
+.log-dot.out { background: var(--c-red); }
+.log-label { font-size: 13px; color: var(--c-gray-600); flex: 1; }
+.log-time { font-size: 13px; font-weight: 600; color: var(--c-black); }
+
+/* ─── CAMERA OVERLAY ─── */
+#camera-overlay {
+  position: fixed; inset: 0;
+  background: var(--c-black);
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+#camera-overlay.show { display: flex; }
+.cam-title { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--c-white); margin-bottom: 6px; }
+.cam-sub { font-size: 13px; color: var(--c-gray-400); margin-bottom: 32px; text-align: center; }
+.cam-frame {
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  border: 3px solid var(--c-green-mid);
+  background: var(--c-gray-800);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 80px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.cam-scanning {
+  position: absolute; inset: 0;
+  background: linear-gradient(transparent 40%, rgba(192,32,26,0.25) 50%, transparent 60%);
+  animation: scan 2s linear infinite;
+}
+@keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+.cam-btns { display: flex; gap: 16px; width: 100%; max-width: 320px; }
+.btn-secondary {
+  flex: 1; padding: 14px;
+  background: var(--c-gray-800);
+  color: var(--c-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-secondary:hover { background: #444440; }
+
+/* ─── OWNER LOGIN ─── */
+#owner-login, #engineer-login {
+  background: var(--c-gray-50);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.ol-card {
+  background: #fff;
+  border: 1px solid var(--c-gray-200);
+  border-radius: var(--radius);
+  padding: 40px 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+}
+.ol-logo { font-family: var(--font-head); font-size: 26px; font-weight: 800; color: var(--c-black); margin-bottom: 4px; }
+.ol-logo span { color: var(--c-green); }
+.ol-sub { font-size: 13px; color: var(--c-gray-400); margin-bottom: 32px; }
+.ol-label { font-size: 12px; color: var(--c-gray-600); font-weight: 500; margin-bottom: 6px; display: block; letter-spacing: 0.04em; text-transform: uppercase; }
+.ol-input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid var(--c-gray-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--c-black);
+  background: var(--c-gray-50);
+  margin-bottom: 16px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.ol-input:focus { border-color: var(--c-green); background: #fff; }
+.ol-hint { font-size: 12px; color: var(--c-gray-400); margin-top: 12px; text-align: center; }
+
+/* ─── OWNER DASHBOARD ─── */
+#owner-dash, #engineer-dash {
+  flex-direction: row;
+  min-height: 100vh;
+  background: var(--c-gray-50);
+}
+.sidebar {
+  width: 240px;
+  background: var(--c-black);
+  display: flex;
+  flex-direction: column;
+  padding: 32px 0;
+  flex-shrink: 0;
+}
+.sb-logo {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--c-white);
+  padding: 0 24px;
+  margin-bottom: 40px;
+}
+.sb-logo span { color: var(--c-green-mid); }
+.sb-section { font-size: 10px; color: var(--c-gray-600); letter-spacing: 0.1em; text-transform: uppercase; padding: 0 24px; margin-bottom: 8px; margin-top: 24px; }
+.sb-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 14px;
+  color: var(--c-gray-400);
+  border-left: 3px solid transparent;
+  font-family: var(--font-body);
+}
+.sb-item:hover { background: rgba(255,255,255,0.05); color: var(--c-white); }
+.sb-item.active { background: rgba(192,32,26,0.08); color: var(--c-green-mid); border-left-color: var(--c-green-mid); }
+.sb-item-icon { font-size: 18px; width: 20px; text-align: center; }
+.sb-bottom { margin-top: auto; padding: 24px; }
+.sb-user { display: flex; align-items: center; gap: 10px; }
+.sb-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--c-green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+  font-family: var(--font-head);
+}
+.sb-user-name { font-size: 13px; color: var(--c-white); font-weight: 500; }
+.sb-user-role { font-size: 11px; color: var(--c-gray-400); }
+
+.dash-main { flex: 1; overflow-y: auto; padding: 32px; }
+.dash-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+.dash-title { font-family: var(--font-head); font-size: 26px; font-weight: 800; color: var(--c-black); }
+.dash-sub { font-size: 13px; color: var(--c-gray-400); margin-top: 2px; }
+.site-selector {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff;
+  border: 1px solid var(--c-gray-200);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--c-black);
+  cursor: pointer;
+  outline: none;
+}
+.alert-banner {
+  background: var(--c-amber-light);
+  border: 1px solid #FCD34D;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: #92400E;
+}
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 28px; }
+#engineer-dash .stats-row { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 600px) {
+  #engineer-dash .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+.stat-box {
+  background: #fff;
+  border: 1px solid var(--c-gray-200);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+}
+.stat-box-label { font-size: 12px; color: var(--c-gray-400); margin-bottom: 8px; letter-spacing: 0.03em; }
+.stat-box-val { font-family: var(--font-head); font-size: 32px; font-weight: 800; color: var(--c-black); }
+.stat-box-sub { font-size: 12px; color: var(--c-gray-400); margin-top: 4px; }
+.stat-box.green .stat-box-val { color: var(--c-green); }
+.stat-box.amber .stat-box-val { color: var(--c-amber); }
+.stat-box.red .stat-box-val { color: var(--c-red); }
+
+.att-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.att-track { flex: 1; height: 10px; background: var(--c-gray-100); border-radius: 5px; overflow: hidden; }
+.att-fill { height: 100%; background: var(--c-green); border-radius: 5px; transition: width 0.6s ease; }
+.att-pct-label { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--c-green); min-width: 44px; }
+.att-desc { font-size: 12px; color: var(--c-gray-400); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+.panel {
+  background: #fff;
+  border: 1px solid var(--c-gray-200);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+.panel-title { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--c-black); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.worker-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--c-gray-100);
+}
+.worker-row:last-child { border-bottom: none; }
+.wr-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: #fff;
+  font-family: var(--font-head);
+  flex-shrink: 0;
+}
+.wr-name { font-size: 13px; font-weight: 500; color: var(--c-black); }
+.wr-role { font-size: 11px; color: var(--c-gray-400); }
+.wr-info { flex: 1; }
+.wr-time { font-size: 12px; color: var(--c-gray-600); text-align: right; }
+.wr-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.wr-badge.in { background: var(--c-green-light); color: var(--c-green); }
+.wr-badge.late { background: var(--c-amber-light); color: var(--c-amber); }
+.wr-badge.out { background: var(--c-red-light); color: var(--c-red); }
+
+.site-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--c-gray-100);
+}
+.site-row:last-child { border-bottom: none; }
+.site-info { display: flex; align-items: center; gap: 10px; }
+.site-live-dot { width: 8px; height: 8px; border-radius: 50%; background: #E0302A; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity: 0.4; } }
+.site-name-text { font-size: 13px; font-weight: 500; color: var(--c-black); }
+.site-loc { font-size: 11px; color: var(--c-gray-400); }
+.site-count { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--c-black); }
+.site-count span { font-size: 11px; font-weight: 400; color: var(--c-gray-400); font-family: var(--font-body); }
+
+.full-table {
+  background: #fff;
+  border: 1px solid var(--c-gray-200);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.ft-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px 0; margin-bottom: 16px; }
+.ft-filters { display: flex; gap: 8px; }
+.ft-filter {
+  font-size: 12px; padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--c-gray-200);
+  background: none;
+  color: var(--c-gray-600);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.15s;
+}
+.ft-filter.active { background: var(--c-black); color: #fff; border-color: var(--c-black); }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  text-align: left; padding: 10px 24px;
+  font-size: 11px; color: var(--c-gray-400);
+  font-weight: 500; letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--c-gray-100);
+  background: var(--c-gray-50);
+}
+tbody td { padding: 13px 24px; font-size: 13px; color: var(--c-black); border-bottom: 1px solid var(--c-gray-100); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--c-gray-50); }
+
+/* ─── MOBILE DASH BOTTOM NAV ─── */
+.mobile-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--c-black);
+  padding: 12px 0 20px;
+  justify-content: space-around;
+  z-index: 50;
+}
+.mn-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+.mn-icon { font-size: 22px; }
+.mn-label { font-size: 10px; color: var(--c-gray-400); }
+.mn-item.active .mn-label { color: var(--c-green-mid); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  #owner-dash { flex-direction: column; }
+  .sidebar { display: none; }
+  .mobile-nav { display: flex; }
+  .dash-main { padding: 20px 16px 90px; }
+  .two-col { grid-template-columns: 1fr; }
+  thead th:nth-child(3), thead th:nth-child(4) { display: none; }
+  tbody td:nth-child(3), tbody td:nth-child(4) { display: none; }
+  #engineer-dash { flex-direction: column; }
+  #engineer-dash .sidebar { display: none; }
+  #engineer-dash .dash-main { padding: 20px 16px 110px; }
+}
+
+/* ─── TOAST ─── */
+#toast {
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+  background: var(--c-black); color: #fff;
+  padding: 14px 24px;
+  border-radius: 40px;
+  font-size: 14px;
+  font-family: var(--font-head);
+  font-weight: 600;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+  pointer-events: none;
+}
+#toast.show { opacity: 1; }
+
+/* ─── ADD WORKER MODAL ─── */
+#add-modal {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+#add-modal.show { display: flex; }
+.modal-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 32px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: var(--shadow-lg);
+}
+.modal-title { font-family: var(--font-head); font-size: 20px; font-weight: 800; color: var(--c-black); margin-bottom: 20px; }
+.modal-row { display: flex; gap: 12px; }
+.modal-field { flex: 1; }
+.modal-label { font-size: 11px; color: var(--c-gray-600); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+.modal-input, .modal-select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--c-gray-200);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--c-black);
+  background: var(--c-gray-50);
+  margin-bottom: 14px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.modal-input:focus, .modal-select:focus { border-color: var(--c-green); background: #fff; }
+.modal-btns { display: flex; gap: 10px; margin-top: 8px; }
+.btn-cancel {
+  flex: 1; padding: 13px;
+  background: var(--c-gray-100);
+  color: var(--c-gray-600);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-add {
+  flex: 2; padding: 13px;
+  background: var(--c-green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ─── SPACEÓ ASSISTANT ─── */
+#ai-fab {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  z-index: 500;
+  display: none;
+}
+#owner-dash.active ~ #ai-fab,
+#ai-fab.visible { display: block; }
+
+.ai-fab-btn {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: var(--c-black);
+  border: 2px solid var(--c-green);
+  box-shadow: 0 4px 24px rgba(192,32,26,0.3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.ai-fab-btn:hover { transform: scale(1.07); box-shadow: 0 6px 32px rgba(192,32,26,0.45); }
+.ai-fab-btn svg { pointer-events: none; }
+.ai-fab-dot {
+  position: absolute; top: 2px; right: 2px;
+  width: 12px; height: 12px;
+  background: var(--c-green); border-radius: 50%;
+  border: 2px solid var(--c-gray-50);
+  animation: pulse 2s infinite;
+}
+
+/* ── AI PANEL — desktop ── */
+#ai-panel {
+  position: fixed;
+  bottom: 100px; right: 28px;
+  width: 380px;
+  max-height: 580px;
+  background: #fff;
+  border: 1px solid var(--c-gray-200);
+  border-radius: 20px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 499;
+  transform: translateY(16px) scale(0.97);
+  opacity: 0;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
+}
+#ai-panel.open {
+  display: flex;
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* ── MOBILE: full-screen chat ── */
+@media (max-width: 768px) {
+  #ai-panel {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    bottom: 0; right: 0;
+    transform: translateY(100%);
+    z-index: 600;
+  }
+  #ai-panel.open {
+    transform: translateY(0);
+  }
+  #ai-fab { bottom: 80px; right: 16px; }
+  .ai-panel-header { padding: 20px 18px 16px; padding-top: max(20px, env(safe-area-inset-top)); }
+  .ai-messages { padding: 20px 16px; }
+  .ai-input-row { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+
+.ai-panel-header {
+  background: var(--c-black);
+  padding: 16px 18px;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.ai-panel-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--c-green);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ai-panel-title { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: #fff; }
+.ai-panel-sub { font-size: 11px; color: var(--c-gray-400); margin-top: 1px; }
+.ai-close-btn {
+  margin-left: auto;
+  background: none; border: none;
+  color: var(--c-gray-400);
+  cursor: pointer; padding: 4px;
+  line-height: 1; font-size: 18px;
+}
+.ai-close-btn:hover { color: #fff; }
+
+/* ── MESSAGES ── */
+.ai-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+.ai-msg {
+  max-width: 88%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.ai-msg.assistant {
+  background: var(--c-gray-50);
+  border: 1px solid var(--c-gray-100);
+  color: var(--c-black);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+.ai-msg.user {
+  background: var(--c-black);
+  color: #fff;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+.ai-msg.loading {
+  background: var(--c-gray-50);
+  border: 1px solid var(--c-gray-100);
+  align-self: flex-start;
+  padding: 14px 18px;
+}
+
+/* ── ERROR CARD ── */
+.ai-msg.error {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+  max-width: 92%;
+}
+.ai-error-title { font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+.ai-error-body  { font-size: 12px; color: #B91C1C; line-height: 1.5; }
+.ai-retry-btn {
+  margin-top: 8px;
+  padding: 6px 14px;
+  background: #991B1B;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 11px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ai-retry-btn:hover { background: #7F1D1D; }
+
+/* ── OUT-OF-SCOPE CARD ── */
+.ai-msg.outofscope {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #78350F;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+  max-width: 92%;
+  font-size: 12.5px;
+}
+
+/* ── TYPING INDICATOR ── */
+.ai-typing { display: flex; gap: 5px; align-items: center; }
+.ai-typing span {
+  width: 7px; height: 7px;
+  background: var(--c-gray-400);
+  border-radius: 50%;
+  animation: bounce 1.2s infinite;
+}
+.ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+.ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+/* ── TIMESTAMP ── */
+.ai-ts {
+  font-size: 10px;
+  color: var(--c-gray-400);
+  text-align: center;
+  margin: 4px 0;
+  align-self: center;
+}
+
+/* ── CHIPS ── */
+.ai-suggestions {
+  padding: 0 16px 12px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.ai-chip {
+  font-size: 11px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  border: 1px solid var(--c-gray-200);
+  background: #fff;
+  color: var(--c-gray-600);
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.ai-chip:hover { border-color: var(--c-green); color: var(--c-green); background: #FDE8E7; }
+
+/* ── INPUT ROW ── */
+.ai-input-row {
+  padding: 12px 14px;
+  border-top: 1px solid var(--c-gray-100);
+  display: flex; gap: 8px; align-items: flex-end;
+  background: #fff;
+  flex-shrink: 0;
+}
+.ai-input {
+  flex: 1;
+  border: 1.5px solid var(--c-gray-200);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--c-black);
+  outline: none;
+  resize: none;
+  max-height: 100px;
+  line-height: 1.4;
+  background: var(--c-gray-50);
+}
+.ai-input:focus { border-color: var(--c-green); background: #fff; }
+.ai-send-btn {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--c-green);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.ai-send-btn:hover { background: #9e1a15; }
+.ai-send-btn:disabled { background: var(--c-gray-200); cursor: not-allowed; }
+
+
+
+/* ─── EXPORT BUTTON ─── */
+.export-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 18px;
+  background: var(--c-black);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+}
+.export-btn:hover { background: #2a2a26; }
+
+
+#pwa-install-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: var(--c-black);
+  color: #fff;
+  padding: 12px 20px;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+  font-size: 13px;
+  font-family: var(--font-body);
+}
+#pwa-install-bar span { flex: 1; }
+#pwa-install-btn {
+  background: var(--c-green); color: #fff; border: none;
+  padding: 8px 16px; border-radius: 8px;
+  font-family: var(--font-head); font-size: 12px; font-weight: 700; cursor: pointer;
+}
+#pwa-dismiss-btn {
+  background: none; border: none; color: var(--c-gray-400);
+  cursor: pointer; padding: 4px 8px; font-size: 18px; line-height: 1;
+}
+
+
+
+/* ─── ENGINEER PHOTO UPLOAD ─── */
+#eng-photo-area:hover { border-color: var(--c-green); }
+.worker-photo-thumb {
+  width: 36px; height: 36px; border-radius: 50%;
+  object-fit: cover; border: 2px solid var(--c-gray-200);
+  cursor: pointer; transition: border-color 0.15s;
+  vertical-align: middle;
+}
+.worker-photo-thumb:hover { border-color: var(--c-green); }
+.no-photo-thumb {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--c-gray-100); border: 2px dashed var(--c-gray-200);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 16px; vertical-align: middle;
+}
+
+/* ─── FACE MATCH STATUS ─── */
+.face-match-ok   { color: #1A7A52; font-size:11px; font-weight:600; }
+.face-match-fail { color: var(--c-red); font-size:11px; font-weight:600; }
+.face-match-pending { color: var(--c-amber); font-size:11px; font-weight:600; }
+
+/* ─── HOSTING GUIDE MODAL ─── */
+
+</style>
+</head>
+<body>
+
+<!-- ═══ LANDING ═══ -->
+
+<!-- PWA Install Banner -->
+<div id="pwa-install-bar">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+  <span>Install Spaceó on your device for quick access</span>
+  <button id="pwa-install-btn">Install</button>
+  <button id="pwa-dismiss-btn">×</button>
+</div>
+
+<div id="landing" class="view active">
+  <div class="land-logo"><span>S</span>PACEÓ</div><div style="font-size:13px;color:var(--c-gray-400);letter-spacing:0.15em;margin-bottom:4px;">INTERIORS LLC</div>
+  
+  <div class="land-cards">
+    <div class="land-card" onclick="goTo('worker-login')">
+      <div class="land-card-icon green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C0201A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <h3>I'm a Worker</h3>
+      <p>Check in and out of your project. Log your hours and shifts.</p>
+    </div>
+    <div class="land-card" onclick="goTo('owner-login')">
+      <div class="land-card-icon amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C0201A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <h3>Owner / Manager</h3>
+      <p>View all projects, attendance reports, and staff activity.</p>
+    </div>
+    <div class="land-card" onclick="goTo('engineer-login')">
+      <div class="land-card-icon" style="background:rgba(192,32,26,0.12);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C0201A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+      <h3>Site Engineer</h3>
+      <p>Manage your assigned site, add workers, and update geofencing.</p>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:11px;color:var(--c-gray-600);letter-spacing:0.05em;">SPACEÓ INTERIORS LLC · DUBAI</div>
+</div>
+
+<!-- ═══ WORKER LOGIN ═══ -->
+<div id="worker-login" class="view">
+  <div class="wl-hero">
+    <button class="wl-back" onclick="goTo('landing')">← Back</button>
+    <div class="wl-hero-text">
+      <h1>Worker<br>Check-in</h1>
+      <p>Select your project and enter your staff PIN</p>
+    </div>
+  </div>
+  <div class="wl-form-sheet">
+    <label class="wl-label">Your site</label>
+    <div class="wl-select-wrap">
+      <select class="wl-select" id="worker-site-select">
+        <option value="">Select site…</option>
+      </select>
+    </div>
+    <label class="wl-label">Your name</label>
+    <input class="wl-input" id="worker-name-input" type="text" placeholder="Enter your full name" />
+    <label class="wl-label">PIN</label>
+    <div class="pin-row">
+      <input class="pin-digit" type="password" inputmode="numeric" maxlength="1" id="p0">
+      <input class="pin-digit" type="password" inputmode="numeric" maxlength="1" id="p1">
+      <input class="pin-digit" type="password" inputmode="numeric" maxlength="1" id="p2">
+      <input class="pin-digit" type="password" inputmode="numeric" maxlength="1" id="p3">
+    </div>
+    <button class="btn-primary" onclick="workerLogin()">Continue →</button>
+    <p style="font-size:12px;color:var(--c-gray-400);text-align:center;margin-top:14px;">Demo PIN: 1234</p>
+  </div>
+</div>
+
+<!-- ═══ WORKER CHECK-IN ═══ -->
+<div id="worker-checkin" class="view">
+  <div class="wc-header">
+    <div class="wc-header-inner">
+      <div>
+        <div class="wc-name" id="wc-worker-name">Ahmed Al Hamdan</div>
+        <div class="wc-site"><div class="wc-site-dot"></div><span id="wc-site-name">Marina Heights — Apt 12A Fit-Out</span></div>
+      </div>
+      <button class="wc-logout-btn" onclick="workerLogout()">Not you?</button>
+    </div>
+  </div>
+  <div class="wc-body">
+    <div class="wc-time-card">
+      <div>
+        <div class="wc-time" id="wc-clock">--:--</div>
+        <div class="wc-date" id="wc-date">--</div>
+      </div>
+      <div class="wc-status-badge status-out" id="wc-status-badge">NOT CHECKED IN</div>
+    </div>
+    <div class="wc-gps-card" id="gps-status-card">
+      <div class="gps-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C0201A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <div>
+        <div class="gps-title" id="gps-title">Detecting location…</div>
+        <div class="gps-sub" id="gps-sub">Please allow location access</div>
+      </div>
+    </div>
+    <button class="checkin-big-btn" id="main-checkin-btn" onclick="toggleCheckin()">
+      <div class="checkin-btn-inner">
+        <div class="checkin-btn-icon" id="checkin-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8,12 11,15 16,9"/></svg></div>
+        <div class="checkin-btn-text" id="checkin-text">Punch In</div>
+        <div class="checkin-btn-sub" id="checkin-sub">Tap to check in to your shift</div>
+      </div>
+    </button>
+    <button class="selfie-btn" onclick="openCamera()">
+      <div class="selfie-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C0201A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 7H3a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2.5l-1.5-2h-6L8 7z"/><circle cx="12" cy="13" r="3"/></svg></div>
+      <div>
+        <div class="selfie-text">Face verification</div>
+        <div class="selfie-sub" id="selfie-status">Tap to verify identity with selfie</div>
+      </div>
+    </button>
+    <div class="wc-log-section">
+      <div class="wc-log-title">Today's activity</div>
+      <div id="activity-log">
+        <div style="font-size:13px;color:var(--c-gray-400);padding:12px 0;">No activity yet today</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CAMERA OVERLAY ═══ -->
+<div id="camera-overlay">
+  <div class="cam-title">Face Verification</div>
+  <div class="cam-sub" id="bio-sub">Position your face in the frame</div>
+  <div class="cam-frame" id="bio-frame" style="position:relative;overflow:hidden;width:220px;height:220px;border-radius:50%;">
+    <video id="bio-video" autoplay playsinline muted style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;"></video>
+    <canvas id="bio-canvas" style="display:none;"></canvas>
+    <div id="bio-icon-fallback">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#C0201A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 1C8.5 1 6 3.5 6 7v2"/><path d="M18 9V7c0-3.5-2.5-6-6-6"/><path d="M6 11c0 3.3 2.7 6 6 6s6-2.7 6-6"/><path d="M12 17v6"/><path d="M9 23h6"/>
+        <circle cx="12" cy="10" r="2"/>
+      </svg>
+    </div>
+    <div class="cam-scanning" id="bio-scan"></div>
+  </div>
+  <div id="bio-status-msg" style="font-size:13px;color:var(--c-gray-400);margin-bottom:20px;text-align:center;min-height:20px;transition:color 0.2s;"></div>
+  <div id="bio-match-result" style="display:none;margin-bottom:16px;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;"></div>
+  <div class="cam-btns">
+    <button class="btn-secondary" onclick="closeCamera()">Cancel</button>
+    <button class="btn-primary" style="flex:2;" id="bio-btn" onclick="startBiometric()">Verify Identity</button>
+  </div>
+</div>
+
+<!-- ═══ OWNER LOGIN ═══ -->
+<div id="owner-login" class="view">
+  <div class="ol-card">
+    <div class="ol-logo"><span>S</span>PACEÓ</div><div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:4px;">INTERIORS LLC</div>
+    <div class="ol-sub">Owner & Manager Portal</div>
+    <label class="ol-label">Email</label>
+    <input class="ol-input" type="email" placeholder="owner@company.com" id="owner-email" value="owner@company.com">
+    <label class="ol-label">Password</label>
+    <input class="ol-input" type="password" placeholder="••••••••" id="owner-pass" value="password">
+    <button class="btn-primary" onclick="ownerLogin()">Sign in →</button>
+    <div class="ol-hint">← <span style="cursor:pointer;color:var(--c-green);" onclick="goTo('landing')">Back to home</span></div>
+  </div>
+</div>
+
+
+<!-- ═══ ENGINEER LOGIN ═══ -->
+<div id="engineer-login" class="view">
+  <div class="ol-card">
+    <div class="ol-logo"><span>S</span>PACEÓ</div>
+    <div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:4px;">INTERIORS LLC</div>
+    <div class="ol-sub" style="color:var(--c-green);">Site Engineer Portal</div>
+    <label class="ol-label">Engineer ID / Email</label>
+    <input class="ol-input" type="text" placeholder="engineer@spaceo.ae" id="eng-id" value="engineer@spaceo.ae">
+    <label class="ol-label">PIN</label>
+    <input class="ol-input" type="password" placeholder="••••••••" id="eng-pass" value="eng123">
+    <button class="btn-primary" onclick="engineerLogin()">Sign in →</button>
+    <div class="ol-hint">← <span style="cursor:pointer;color:var(--c-green);" onclick="goTo('landing')">Back to home</span></div>
+  </div>
+</div>
+
+<!-- ═══ ENGINEER DASHBOARD ═══ -->
+<div id="engineer-dash" class="view">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sb-logo"><span>S</span>PACEÓ <span style="font-size:11px;font-weight:400;color:var(--c-gray-400);display:block;letter-spacing:0.1em;margin-top:-4px;">SITE ENGINEER</span></div>
+
+    <!-- SITE SWITCHER (shown only when managing multiple sites) -->
+    <div id="eng-site-switcher" style="display:none;padding:0 16px 12px;">
+      <div style="font-size:10px;font-weight:600;color:var(--c-gray-400);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">Active Site</div>
+      <select id="eng-site-select" onchange="switchEngSite(this.value)" style="width:100%;background:#1a1a1a;border:1px solid #333;color:#fff;padding:8px 10px;border-radius:8px;font-size:12px;font-family:var(--font-body);cursor:pointer;"></select>
+    </div>
+
+    <div class="sb-section" id="eng-sb-section-label">My Site</div>
+    <div class="sb-item active" id="eng-tab-btn-overview" onclick="showEngTab('overview', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span> Overview
+    </div>
+    <div class="sb-item" id="eng-tab-btn-workers" onclick="showEngTab('workers', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Workers
+    </div>
+    <div class="sb-item" id="eng-tab-btn-geofence" onclick="showEngTab('geofence', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span> Geofence
+    </div>
+    <div class="sb-item" id="eng-tab-btn-attendance" onclick="showEngTab('attendance', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span> Attendance
+    </div>
+    <div class="sb-section">Actions</div>
+    <div class="sb-item" onclick="showEngAddWorker()">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span> Add Worker
+    </div>
+    <div class="sb-item" onclick="showEngDailySummary()">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Daily Summary
+    </div>
+    <div class="sb-item" onclick="goTo('landing')">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span> Sign Out
+    </div>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar" style="background:#D97706;">SE</div>
+        <div>
+          <div class="sb-user-name" id="eng-user-name">Site Engineer</div>
+          <div class="sb-user-role" id="eng-user-site">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="dash-main">
+
+    <!-- OVERVIEW TAB -->
+    <div id="eng-tab-overview">
+      <div class="dash-topbar">
+        <div>
+          <div class="dash-title" id="eng-site-title">My Site</div>
+          <div class="dash-sub" id="eng-date-line">—</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box green"><div class="stat-box-label">On site now</div><div class="stat-box-val" id="eng-d-present">0</div><div class="stat-box-sub">checked in</div></div>
+        <div class="stat-box amber"><div class="stat-box-label">Late</div><div class="stat-box-val" id="eng-d-late">0</div><div class="stat-box-sub">today</div></div>
+        <div class="stat-box red"><div class="stat-box-label">Absent</div><div class="stat-box-val" id="eng-d-absent">0</div><div class="stat-box-sub">not checked in</div></div>
+        <div class="stat-box"><div class="stat-box-label">Total</div><div class="stat-box-val" id="eng-d-total">0</div><div class="stat-box-sub">assigned</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+        <div class="att-desc" style="white-space:nowrap;">Attendance rate</div>
+        <div class="att-track"><div class="att-fill" id="eng-att-fill" style="width:0%"></div></div>
+        <div class="att-pct-label" id="eng-att-pct">0%</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Workers on site now</div>
+        <div id="eng-live-list"></div>
+      </div>
+    </div>
+
+    <!-- WORKERS TAB -->
+    <div id="eng-tab-workers" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+        <div class="dash-title">Site Workers</div>
+        <button class="export-btn" onclick="showEngAddWorker()" style="background:var(--c-black);color:#fff;border-color:var(--c-black);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Worker
+        </button>
+      </div>
+      <div class="panel" style="padding:0;overflow:hidden;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead><tr style="background:var(--c-black);color:#fff;">
+            <th style="padding:12px 16px;text-align:left;font-size:11px;letter-spacing:0.05em;">Worker</th>
+            <th style="padding:12px 16px;text-align:left;font-size:11px;letter-spacing:0.05em;">Status</th>
+            <th style="padding:12px 16px;text-align:left;font-size:11px;letter-spacing:0.05em;">Punch In</th>
+            <th style="padding:12px 16px;text-align:left;font-size:11px;letter-spacing:0.05em;">Hours</th>
+            <th style="padding:12px 16px;text-align:left;font-size:11px;letter-spacing:0.05em;">Photo</th>
+          </tr></thead>
+          <tbody id="eng-workers-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GEOFENCE TAB -->
+    <div id="eng-tab-geofence" style="display:none;">
+      <div class="dash-title" style="margin-bottom:20px;">Geofence Settings</div>
+      <div class="panel" style="margin-bottom:16px;">
+        <div class="panel-title">Current Geofence — <span id="eng-geo-site-name" style="color:var(--c-green);"></span></div>
+        <div id="eng-geo-status" style="font-size:13px;color:var(--c-gray-600);margin-bottom:16px;">Loading…</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div><label class="modal-label">Latitude</label><input class="modal-input" id="eng-lat" type="number" step="any" placeholder="25.2048"></div>
+          <div><label class="modal-label">Longitude</label><input class="modal-input" id="eng-lng" type="number" step="any" placeholder="55.2708"></div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label class="modal-label">Geofence Radius (metres)</label>
+          <input class="modal-input" id="eng-radius" type="number" min="50" placeholder="300">
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button onclick="engDetectLocation()" style="padding:11px 16px;background:var(--c-gray-100);border:1px solid var(--c-gray-200);border-radius:var(--radius-sm);font-size:13px;font-family:var(--font-body);color:var(--c-black);cursor:pointer;">📡 Detect my location</button>
+          <button onclick="engSaveGeofence()" style="padding:11px 20px;background:var(--c-black);color:#fff;border:none;border-radius:var(--radius-sm);font-family:var(--font-head);font-size:13px;font-weight:700;cursor:pointer;">Save Geofence →</button>
+        </div>
+      </div>
+      <div class="panel" style="background:#F0FFF4;border:1px solid #BBF7D0;">
+        <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:#065F46;margin-bottom:6px;">📍 How geofencing works</div>
+        <div style="font-size:12px;color:#065F46;line-height:1.7;">Workers can only punch in when their phone GPS is within the radius you set. 200–400m is recommended for a building site.</div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE TAB (manual override) -->
+    <div id="eng-tab-attendance" style="display:none;">
+      <div class="dash-topbar">
+        <div><div class="dash-title">Manual Attendance</div><div class="dash-sub">Override punch status or add notes for any worker</div></div>
+      </div>
+      <div id="eng-attendance-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ENGINEER MOBILE MORE SHEET -->
+<div id="eng-more-sheet" style="display:none;position:fixed;inset:0;z-index:550;background:rgba(0,0,0,0.5);" onclick="closeEngMobMore()">
+  <div onclick="event.stopPropagation()" style="position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;padding:24px;padding-bottom:max(24px,env(safe-area-inset-bottom));">
+    <div style="width:40px;height:4px;background:var(--c-gray-200);border-radius:2px;margin:0 auto 20px;"></div>
+    <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--c-black);margin-bottom:16px;">Actions</div>
+    <div onclick="closeEngMobMore();showEngAddWorker();" style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--c-gray-100);cursor:pointer;">
+      <div style="width:40px;height:40px;background:var(--c-gray-50);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">➕</div>
+      <div><div style="font-weight:600;font-size:14px;">Add Worker</div><div style="font-size:12px;color:var(--c-gray-400);">Register a new worker to this site</div></div>
+    </div>
+    <div onclick="closeEngMobMore();showEngDailySummary();" style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--c-gray-100);cursor:pointer;">
+      <div style="width:40px;height:40px;background:var(--c-gray-50);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">📋</div>
+      <div><div style="font-weight:600;font-size:14px;">Daily Summary</div><div style="font-size:12px;color:var(--c-gray-400);">End-of-day report for this site</div></div>
+    </div>
+    <div onclick="closeEngMobMore();goTo('landing');" style="display:flex;align-items:center;gap:14px;padding:14px 0;cursor:pointer;">
+      <div style="width:40px;height:40px;background:#FEE2E2;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🚪</div>
+      <div><div style="font-weight:600;font-size:14px;color:var(--c-red);">Sign Out</div><div style="font-size:12px;color:var(--c-gray-400);">Return to home screen</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ENGINEER MOBILE NAV — top level, controlled by goTo() -->
+<div id="eng-mobile-nav" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--c-black);z-index:100;flex-direction:column;">
+  <div id="eng-mob-site-strip" style="display:none;background:#1a1a1a;padding:8px 16px;border-bottom:1px solid #333;">
+    <select id="eng-mob-site-select" onchange="switchEngSite(this.value)" style="width:100%;background:transparent;border:none;color:#fff;font-size:13px;font-family:var(--font-body);outline:none;cursor:pointer;"></select>
+  </div>
+  <div style="display:flex;justify-content:space-around;padding:10px 0 max(18px,env(safe-area-inset-bottom));">
+    <div class="mn-item active" id="eng-mob-btn-overview" onclick="engMobTab('overview',this)">
+      <div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
+      <div class="mn-label">Overview</div>
+    </div>
+    <div class="mn-item" id="eng-mob-btn-workers" onclick="engMobTab('workers',this)">
+      <div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+      <div class="mn-label">Workers</div>
+    </div>
+    <div class="mn-item" id="eng-mob-btn-attendance" onclick="engMobTab('attendance',this)">
+      <div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      <div class="mn-label">Attendance</div>
+    </div>
+    <div class="mn-item" id="eng-mob-btn-geofence" onclick="engMobTab('geofence',this)">
+      <div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <div class="mn-label">Geofence</div>
+    </div>
+    <div class="mn-item" id="eng-mob-btn-more" onclick="showEngMobMore()">
+      <div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+      <div class="mn-label">More</div>
+    </div>
+  </div>
+</div>
+
+
+<div id="worker-note-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
+  <div class="modal-card" style="max-width:420px;">
+    <div class="modal-title" id="note-modal-title">Add Note</div>
+    <div id="note-worker-info" style="background:var(--c-gray-50);border:1px solid var(--c-gray-200);border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px;"></div>
+    <label class="modal-label">Note / Flag</label>
+    <textarea class="modal-input" id="note-text" rows="3" placeholder="e.g. Sent home early — injury on site. Equipment returned." style="resize:none;"></textarea>
+    <label class="modal-label" style="margin-top:4px;">Flag type</label>
+    <select class="modal-select" id="note-flag">
+      <option value="">No flag</option>
+      <option value="injury">🔴 Injury / Health</option>
+      <option value="early">🟠 Sent home early</option>
+      <option value="equipment">🔵 Equipment issue</option>
+      <option value="disciplinary">⚫ Disciplinary</option>
+      <option value="other">⚪ Other</option>
+    </select>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeNoteModal()">Cancel</button>
+      <button class="btn-add" onclick="saveWorkerNote()">Save Note →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY SUMMARY MODAL -->
+<div id="daily-summary-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
+  <div class="modal-card" style="max-width:500px;max-height:90vh;overflow-y:auto;">
+    <div class="modal-title">End of Day Summary</div>
+    <div id="daily-summary-body" style="font-size:13px;line-height:1.8;color:var(--c-gray-600);margin-bottom:20px;"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="document.getElementById('daily-summary-modal').style.display='none'">Close</button>
+      <button class="btn-add" onclick="exportDailySummaryPDF()">Save as PDF →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ENGINEER ADD WORKER MODAL -->
+<div id="eng-add-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
+  <div class="modal-card" style="max-width:500px;max-height:90vh;overflow-y:auto;">
+    <div class="modal-title">Add Worker to Site</div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label class="modal-label">First name</label>
+        <input class="modal-input" id="eng-new-first" type="text" placeholder="Ahmed">
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Last name</label>
+        <input class="modal-input" id="eng-new-last" type="text" placeholder="Al Hamdan">
+      </div>
+    </div>
+    <label class="modal-label">Role</label>
+    <select class="modal-select" id="eng-new-role">
+      <option>Gypsum Installer</option><option>Joinery Worker</option><option>Painter</option><option>Tiler</option><option>Electrician</option><option>AC Technician</option><option>Plumber</option><option>Site Supervisor</option><option>Wallpaper Installer</option><option>Flooring Specialist</option>
+    </select>
+    <label class="modal-label">Worker PIN</label>
+    <input class="modal-input" id="eng-new-pin" type="text" inputmode="numeric" maxlength="4" placeholder="4-digit PIN">
+
+    <!-- PHOTO UPLOAD -->
+    <label class="modal-label">Worker Photo <span style="font-size:11px;color:var(--c-gray-400);">(used for face verification)</span></label>
+    <div id="eng-photo-area" onclick="document.getElementById('eng-photo-input').click()" style="border:2px dashed var(--c-gray-200);border-radius:var(--radius-sm);padding:24px;text-align:center;cursor:pointer;margin-bottom:14px;transition:border-color 0.15s;background:var(--c-gray-50);">
+      <div id="eng-photo-preview" style="display:none;margin-bottom:8px;">
+        <img id="eng-photo-img" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--c-green);">
+      </div>
+      <div id="eng-photo-placeholder">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--c-gray-400)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M5.5 7H3a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2.5l-1.5-2h-6L8 7z"/><circle cx="12" cy="13" r="3"/></svg>
+        <div style="font-size:13px;color:var(--c-gray-400);">Tap to upload photo</div>
+        <div style="font-size:11px;color:var(--c-gray-400);margin-top:4px;">JPG or PNG · Used for face matching at check-in</div>
+      </div>
+    </div>
+    <input type="file" id="eng-photo-input" accept="image/*" capture="user" style="display:none;" onchange="engPhotoSelected(this)">
+
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeEngAddWorker()">Cancel</button>
+      <button class="btn-add" onclick="engAddWorker()">Add Worker →</button>
+    </div>
+  </div>
+</div>
+
+<!-- WORKER PHOTO VIEW MODAL -->
+<div id="photo-view-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:400;align-items:center;justify-content:center;padding:24px;" onclick="document.getElementById('photo-view-modal').style.display='none'">
+  <div style="text-align:center;">
+    <img id="photo-view-img" style="width:200px;height:200px;border-radius:50%;object-fit:cover;border:4px solid #fff;margin-bottom:16px;">
+    <div id="photo-view-name" style="color:#fff;font-family:var(--font-head);font-size:18px;font-weight:700;"></div>
+    <div id="photo-view-role" style="color:#aaa;font-size:13px;margin-top:4px;"></div>
+    <div style="color:#666;font-size:12px;margin-top:20px;">Tap anywhere to close</div>
+  </div>
+</div>
+
+
+<!-- ═══ OWNER DASHBOARD ═══ -->
+<div id="owner-dash" class="view">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sb-logo"><span>S</span>PACEÓ <span style="font-size:11px;font-weight:400;color:var(--c-gray-400);display:block;letter-spacing:0.1em;margin-top:-4px;">INTERIORS LLC</span></div>
+    <div class="sb-section">Overview</div>
+    <div class="sb-item active" onclick="showDashTab('overview', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span> Dashboard
+    </div>
+    <div class="sb-item" onclick="showDashTab('workers', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> All Workers
+    </div>
+    <div class="sb-item" onclick="showDashTab('sites', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span> Projects
+    </div>
+    <div class="sb-item" onclick="showDashTab('reports', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Reports
+    </div>
+    <div class="sb-section">Admin</div>
+    <div class="sb-item" onclick="showAddModal()">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span> Add Worker
+    </div>
+
+    <div class="sb-item" onclick="goTo('landing')">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span> Sign Out
+    </div>
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar">OW</div>
+        <div>
+          <div class="sb-user-name">Spaceó Admin</div>
+          <div class="sb-user-role">Project Manager</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="dash-main">
+    <!-- OVERVIEW TAB -->
+    <div id="tab-overview">
+      <div class="dash-topbar">
+        <div>
+          <div class="dash-title">Good morning</div>
+          <div class="dash-sub" id="dash-date-line">Tuesday, 26 May 2026</div>
+        </div>
+        <select class="site-selector" onchange="filterBySite(this.value)" id="site-filter-select">
+          <option value="all">All Sites</option>
+        </select>
+      </div>
+      <div class="alert-banner" id="alert-banner">
+        <strong>3 staff late</strong> across 2 projects — last updated <span id="alert-time">just now</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-box-label">Total workforce</div>
+          <div class="stat-box-val" id="d-total">48</div>
+          <div class="stat-box-sub">across all projects</div>
+        </div>
+        <div class="stat-box green">
+          <div class="stat-box-label">On site now</div>
+          <div class="stat-box-val" id="d-present">34</div>
+          <div class="stat-box-sub">checked in</div>
+        </div>
+        <div class="stat-box amber">
+          <div class="stat-box-label">Late arrivals</div>
+          <div class="stat-box-val" id="d-late">3</div>
+          <div class="stat-box-sub">today</div>
+        </div>
+        <div class="stat-box red">
+          <div class="stat-box-label">Absent</div>
+          <div class="stat-box-val" id="d-absent">11</div>
+          <div class="stat-box-sub">not checked in</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+        <div class="att-desc" style="white-space:nowrap;">Attendance rate</div>
+        <div class="att-track"><div class="att-fill" id="d-att-fill" style="width:77%"></div></div>
+        <div class="att-pct-label" id="d-att-pct">77%</div>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-title">On site now</div>
+          <div id="live-workers-list"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Projects overview</div>
+          <div id="sites-overview-list"></div>
+        </div>
+      </div>
+      <!-- Flagged workers — shown only when engineer notes exist -->
+      <div class="panel" id="flagged-workers-panel" style="display:none;border-left:3px solid var(--c-red);"></div>
+    </div>
+
+    <!-- WORKERS TAB -->
+    <div id="tab-workers" style="display:none;">
+      <div class="dash-topbar">
+        <div>
+          <div class="dash-title">All Workers</div>
+          <div class="dash-sub">Full attendance log for today</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="export-btn" onclick="exportCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+          <button class="btn-primary" style="width:auto;padding:12px 20px;font-size:14px;" onclick="showAddModal()">+ Add Worker</button>
+        </div>
+      </div>
+
+      <!-- BULK ACTION BAR (hidden until selection) -->
+      <div id="bulk-bar" style="display:none;align-items:center;justify-content:space-between;background:var(--c-black);color:#fff;padding:12px 20px;border-radius:var(--radius-sm);margin-bottom:16px;gap:12px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span id="bulk-count" style="font-family:var(--font-head);font-size:14px;font-weight:700;">0 selected</span>
+          <button onclick="clearBulkSelection()" style="background:none;border:none;color:var(--c-gray-400);cursor:pointer;font-size:12px;font-family:var(--font-body);padding:0;">Clear</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="showBulkReassign()" style="padding:8px 16px;background:var(--c-green);color:#fff;border:none;border-radius:8px;font-family:var(--font-head);font-size:13px;font-weight:700;cursor:pointer;">
+            🔀 Reassign Site
+          </button>
+          <button onclick="bulkDelete()" style="padding:8px 16px;background:var(--c-red-light);color:var(--c-red);border:1px solid #FECACA;border-radius:8px;font-family:var(--font-head);font-size:13px;font-weight:700;cursor:pointer;">
+            Remove Selected
+          </button>
+        </div>
+      </div>
+
+      <div class="full-table">
+        <div class="ft-header">
+          <div class="ft-filters">
+            <button class="ft-filter active" onclick="filterWorkerTable('all',this)">All</button>
+            <button class="ft-filter" onclick="filterWorkerTable('In',this)">On Site</button>
+            <button class="ft-filter" onclick="filterWorkerTable('Late',this)">Late</button>
+            <button class="ft-filter" onclick="filterWorkerTable('Absent',this)">Absent</button>
+          </div>
+          <div style="font-size:12px;color:var(--c-gray-400);margin-left:auto;padding-right:4px;">Tick to select</div>
+        </div>
+        <table>
+          <thead><tr>
+            <th style="width:40px;"><input type="checkbox" id="select-all-cb" onchange="toggleSelectAll(this)" style="cursor:pointer;width:15px;height:15px;accent-color:var(--c-green);"></th>
+            <th>Worker</th><th>Site</th><th>Punch in</th><th>Hours</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="workers-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SITES TAB -->
+    <div id="tab-sites" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+        <div class="dash-title">Sites</div>
+        <button class="export-btn" onclick="showAddSiteModal()" style="background:var(--c-black);color:#fff;border-color:var(--c-black);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Site
+        </button>
+      </div>
+      <div id="sites-full-list"></div>
+    </div>
+
+    <!-- REPORTS TAB -->
+    <div id="tab-reports" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:6px;">
+        <div class="dash-title">Reports</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="export-btn" onclick="exportCSV()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export CSV
+          </button>
+          <button class="export-btn" onclick="exportPayrollPDF()" style="background:var(--c-black);color:#fff;border-color:var(--c-black);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+            Payroll PDF
+          </button>
+        </div>
+      </div>
+      <div class="dash-sub" style="margin-bottom:24px;">Weekly summary — week of 26 May 2026</div>
+      <div class="stats-row" style="margin-bottom:28px;">
+        <div class="stat-box"><div class="stat-box-label">Avg attendance</div><div class="stat-box-val green">81%</div><div class="stat-box-sub">this week</div></div>
+        <div class="stat-box"><div class="stat-box-label">Total hours logged</div><div class="stat-box-val">1,842</div><div class="stat-box-sub">across all workers</div></div>
+        <div class="stat-box"><div class="stat-box-label">Late incidents</div><div class="stat-box-val amber">14</div><div class="stat-box-sub">this week</div></div>
+        <div class="stat-box"><div class="stat-box-label">Absent days</div><div class="stat-box-val red">23</div><div class="stat-box-sub">this week</div></div>
+      </div>
+      <div class="panel" style="margin-bottom:20px;">
+        <div class="panel-title">Daily attendance this week</div>
+        <div id="weekly-att-chart" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px;"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Best attendance this week</div>
+        <div id="top-workers-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="mn-item active" onclick="showDashTab('overview', this)"><div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><div class="mn-label">Dashboard</div></div>
+    <div class="mn-item" onclick="showDashTab('workers', this)"><div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="mn-label">Workers</div></div>
+    <div class="mn-item" onclick="showDashTab('sites', this)"><div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="mn-label">Projects</div></div>
+    <div class="mn-item" onclick="showDashTab('reports', this)"><div class="mn-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div><div class="mn-label">Reports</div></div>
+  </div>
+</div>
+
+<!-- ADD WORKER MODAL -->
+<div id="add-modal">
+  <div class="modal-card">
+    <div class="modal-title">Add New Worker</div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label class="modal-label">First name</label>
+        <input class="modal-input" id="new-first" type="text" placeholder="Ahmed">
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Last name</label>
+        <input class="modal-input" id="new-last" type="text" placeholder="Al Hamdan">
+      </div>
+    </div>
+    <label class="modal-label">Role</label>
+    <select class="modal-select" id="new-role">
+      <option>Gypsum Installer</option><option>Joinery Worker</option><option>Painter</option><option>Tiler</option><option>Electrician</option><option>AC Technician</option><option>Plumber</option><option>Site Supervisor</option><option>Wallpaper Installer</option><option>Flooring Specialist</option>
+    </select>
+    <label class="modal-label">Assigned site</label>
+    <select class="modal-select" id="new-site">
+      <option value="">No sites added yet</option>
+    </select>
+    <label class="modal-label">Worker PIN</label>
+    <input class="modal-input" id="new-pin" type="text" inputmode="numeric" maxlength="4" placeholder="4-digit PIN">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-add" onclick="addWorker()">Add Worker →</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT WORKER MODAL -->
+<div id="edit-worker-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:24px;">
+  <div class="modal-card" style="max-width:480px;">
+    <div class="modal-title">Edit Worker</div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label class="modal-label">First name</label>
+        <input class="modal-input" id="ew-first" type="text">
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Last name</label>
+        <input class="modal-input" id="ew-last" type="text">
+      </div>
+    </div>
+    <label class="modal-label">Role</label>
+    <select class="modal-select" id="ew-role">
+      <option>Gypsum Installer</option><option>Joinery Worker</option><option>Painter</option><option>Tiler</option><option>Electrician</option><option>AC Technician</option><option>Plumber</option><option>Site Supervisor</option><option>Wallpaper Installer</option><option>Flooring Specialist</option>
+    </select>
+    <label class="modal-label">Assigned site</label>
+    <select class="modal-select" id="ew-site"></select>
+    <label class="modal-label">New PIN <span style="font-size:11px;color:var(--c-gray-400);">(leave blank to keep current)</span></label>
+    <input class="modal-input" id="ew-pin" type="text" inputmode="numeric" maxlength="4" placeholder="4-digit PIN">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeEditWorkerModal()">Cancel</button>
+      <button class="btn-add" onclick="saveEditWorker()">Save Changes →</button>
+    </div>
+  </div>
+</div>
+
+<!-- BULK REASSIGN MODAL -->
+<div id="bulk-reassign-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
+  <div class="modal-card" style="max-width:420px;">
+    <div class="modal-title">Reassign Site</div>
+    <div id="bulk-reassign-summary" style="background:var(--c-gray-50);border:1px solid var(--c-gray-200);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:13px;color:var(--c-gray-600);line-height:1.6;"></div>
+    <label class="modal-label">Move selected workers to</label>
+    <select class="modal-select" id="bulk-new-site"></select>
+    <div style="font-size:12px;color:var(--c-gray-400);margin-bottom:16px;margin-top:-8px;">Their PIN, photo, and history will all carry over automatically.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeBulkReassign()">Cancel</button>
+      <button class="btn-add" onclick="confirmBulkReassign()">Confirm Reassignment →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ARCHIVE SITE MODAL -->
+<div id="archive-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
+  <div class="modal-card" style="max-width:460px;">
+    <div class="modal-title">Complete & Archive Site</div>
+    <div id="archive-site-info" style="background:var(--c-gray-50);border:1px solid var(--c-gray-200);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:13px;line-height:1.6;"></div>
+    <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;">
+      <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:#92400E;margin-bottom:4px;">⚠ Workers still assigned</div>
+      <div style="font-size:12px;color:#92400E;line-height:1.6;">These workers need to be reassigned before archiving. Select a destination site or leave unassigned.</div>
+    </div>
+    <label class="modal-label">Reassign workers to</label>
+    <select class="modal-select" id="archive-reassign-site">
+      <option value="">Leave unassigned</option>
+    </select>
+    <div style="font-size:12px;color:var(--c-gray-400);margin-bottom:16px;margin-top:-8px;">All historical data for this site will be preserved in read-only archive.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeArchiveModal()">Cancel</button>
+      <button class="btn-add" onclick="confirmArchive()" style="background:#D97706;border-color:#D97706;">Archive Site →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ADD/EDIT SITE MODAL -->
+<div id="site-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:24px;">
+  <div class="modal-card" style="max-width:480px;max-height:90vh;overflow-y:auto;">
+    <div class="modal-title" id="site-modal-title">Add New Site</div>
+
+    <label class="modal-label">Project / Site Name</label>
+    <input class="modal-input" id="sm-name" type="text" placeholder="e.g. DIFC Tower — Level 18 Office">
+
+    <label class="modal-label">Location / Area</label>
+    <input class="modal-input" id="sm-loc" type="text" placeholder="e.g. DIFC, Dubai">
+
+    <label class="modal-label">Max Capacity (workers)</label>
+    <input class="modal-input" id="sm-cap" type="number" min="1" placeholder="e.g. 10">
+
+    <div style="background:var(--c-gray-50);border:1px solid var(--c-gray-200);border-radius:var(--radius-sm);padding:16px;margin-bottom:14px;">
+      <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--c-black);margin-bottom:4px;">📍 GPS Geofence <span style="font-size:11px;font-weight:400;color:var(--c-gray-400);">(optional — for check-in verification)</span></div>
+      <div style="font-size:12px;color:var(--c-gray-600);margin-bottom:12px;">Paste coordinates from Google Maps or use the detect button.</div>
+      <div class="modal-row" style="margin-bottom:0;">
+        <div class="modal-field">
+          <label class="modal-label">Latitude</label>
+          <input class="modal-input" id="sm-lat" type="number" step="any" placeholder="25.2048" style="margin-bottom:0;">
+        </div>
+        <div class="modal-field">
+          <label class="modal-label">Longitude</label>
+          <input class="modal-input" id="sm-lng" type="number" step="any" placeholder="55.2708" style="margin-bottom:0;">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px;align-items:center;">
+        <div class="modal-field" style="flex:1;">
+          <label class="modal-label" style="margin-top:10px;">Geofence Radius (metres)</label>
+          <input class="modal-input" id="sm-radius" type="number" min="50" placeholder="300" style="margin-bottom:0;">
+        </div>
+        <button onclick="detectSiteLocation()" style="flex-shrink:0;margin-top:22px;padding:11px 14px;background:var(--c-gray-100);border:1px solid var(--c-gray-200);border-radius:var(--radius-sm);font-size:12px;font-family:var(--font-body);color:var(--c-black);cursor:pointer;white-space:nowrap;">
+          📡 Detect my location
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeSiteModal()">Cancel</button>
+      <button class="btn-add" onclick="saveSite()" id="sm-save-btn">Add Site →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── SITE MANAGEMENT ───
+let editingSiteIndex = -1;
+
+function loadSites() {
+  try {
+    const saved = localStorage.getItem('spaceo_sites');
+    if (saved) {
+      SITES = JSON.parse(saved);
+    } else {
+      SITES = [];
+    }
+  } catch(e) { SITES = []; }
+  refreshSiteDropdowns();
+}
+
+function saveSitesToStorage() {
+  try { localStorage.setItem('spaceo_sites', JSON.stringify(SITES)); } catch(e) {}
+}
+
+function refreshSiteDropdowns() {
+  const opts = SITES.filter(s => !s.archived).map(s => `<option>${s.name}</option>`).join('');
+  const wlSel = document.getElementById('worker-site-select');
+  if (wlSel) wlSel.innerHTML = '<option value="">Select site…</option>' + opts;
+  const filterSel = document.getElementById('site-filter-select');
+  if (filterSel) filterSel.innerHTML = '<option value="all">All Sites</option>' + opts;
+  const newSite = document.getElementById('new-site');
+  if (newSite) newSite.innerHTML = opts || '<option value="">No sites yet</option>';
+}
+
+function showAddSiteModal() {
+  editingSiteIndex = -1;
+  document.getElementById('site-modal-title').textContent = 'Add New Site';
+  document.getElementById('sm-save-btn').textContent = 'Add Site →';
+  document.getElementById('sm-name').value = '';
+  document.getElementById('sm-loc').value = '';
+  document.getElementById('sm-cap').value = '';
+  document.getElementById('sm-lat').value = '';
+  document.getElementById('sm-lng').value = '';
+  document.getElementById('sm-radius').value = '';
+  const m = document.getElementById('site-modal');
+  m.style.display = 'flex';
+}
+
+function showEditSiteModal(i) {
+  editingSiteIndex = i;
+  const s = SITES[i];
+  document.getElementById('site-modal-title').textContent = 'Edit Site';
+  document.getElementById('sm-save-btn').textContent = 'Save Changes →';
+  document.getElementById('sm-name').value = s.name;
+  document.getElementById('sm-loc').value = s.loc || '';
+  document.getElementById('sm-cap').value = s.capacity || '';
+  document.getElementById('sm-lat').value = s.lat || '';
+  document.getElementById('sm-lng').value = s.lng || '';
+  document.getElementById('sm-radius').value = s.radius || '';
+  const m = document.getElementById('site-modal');
+  m.style.display = 'flex';
+}
+
+function closeSiteModal() {
+  document.getElementById('site-modal').style.display = 'none';
+}
+
+function detectSiteLocation() {
+  if (!navigator.geolocation) { toast('GPS not available'); return; }
+  toast('Detecting location…');
+  navigator.geolocation.getCurrentPosition(pos => {
+    document.getElementById('sm-lat').value = pos.coords.latitude.toFixed(6);
+    document.getElementById('sm-lng').value = pos.coords.longitude.toFixed(6);
+    if (!document.getElementById('sm-radius').value) document.getElementById('sm-radius').value = 300;
+    toast('Location detected ✓');
+  }, () => toast('Could not get location'));
+}
+
+function saveSite() {
+  const name = document.getElementById('sm-name').value.trim();
+  const loc = document.getElementById('sm-loc').value.trim();
+  const cap = parseInt(document.getElementById('sm-cap').value) || 10;
+  const lat = parseFloat(document.getElementById('sm-lat').value) || null;
+  const lng = parseFloat(document.getElementById('sm-lng').value) || null;
+  const radius = parseInt(document.getElementById('sm-radius').value) || 300;
+
+  if (!name) { toast('Please enter a site name'); return; }
+
+  const site = { name, loc, capacity: cap, lat, lng, radius };
+
+  if (editingSiteIndex === -1) {
+    SITES.push(site);
+    toast('Site added ✓');
+  } else {
+    const oldName = SITES[editingSiteIndex].name;
+    // Update any workers assigned to old name
+    if (oldName !== name) {
+      workers.forEach(w => { if (w.site === oldName) w.site = name; });
+    }
+    SITES[editingSiteIndex] = site;
+    toast('Site updated ✓');
+  }
+
+  saveSitesToStorage();
+  refreshSiteDropdowns();
+  renderSitesFull();
+  renderSitesOverview();
+  closeSiteModal();
+}
+
+function archiveSite(i) {
+  const s = SITES[i];
+  const assigned = workers.filter(w => w.site === s.name);
+  if (assigned.length > 0) {
+    showArchiveModal(i);
+  } else {
+    if (!confirm(`Mark "${s.name.split('—')[0].trim()}" as complete and archive it?`)) return;
+    SITES[i].archived = true;
+    SITES[i].archivedAt = new Date().toISOString();
+    saveSitesToStorage();
+    refreshSiteDropdowns();
+    renderSitesFull();
+    renderSitesOverview();
+    toast('Site archived ✓');
+  }
+}
+
+function restoreSite(i) {
+  SITES[i].archived = false;
+  SITES[i].archivedAt = null;
+  saveSitesToStorage();
+  refreshSiteDropdowns();
+  renderSitesFull();
+  renderSitesOverview();
+  toast('Site restored ✓');
+}
+
+function permanentDeleteSite(i) {
+  const s = SITES[i];
+  if (!confirm(`Permanently delete "${s.name.split('—')[0].trim()}"?\n\nThis will erase all historical data and cannot be undone.`)) return;
+  SITES.splice(i, 1);
+  saveSitesToStorage();
+  refreshSiteDropdowns();
+  renderSitesFull();
+  renderSitesOverview();
+  toast('Site permanently deleted');
+}
+
+// Close modal on backdrop click
+document.getElementById('site-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeSiteModal();
+});
+</script>
+
+
+
+<script>
+// ─── DATA ───
+const AVATAR_COLORS = ['#1A7A52','#2563EB','#7C3AED','#DC2626','#D97706','#0891B2','#BE185D','#065F46'];
+let workers = [];
+
+function loadWorkers() {
+  try {
+    const saved = localStorage.getItem('spaceo_workers');
+    if (saved) workers = JSON.parse(saved);
+  } catch(e) { workers = []; }
+}
+
+function saveWorkers() {
+  try { localStorage.setItem('spaceo_workers', JSON.stringify(workers)); } catch(e) {}
+}
+
+let SITES = [];
+
+// ─── STATE ───
+let checkedIn = false;
+let checkInTime = null;
+let faceVerified = false;
+let currentWorker = {name:'', site:''};
+let dashFilter = 'all';
+let workerTableFilter = 'all';
+
+// ─── STARTUP ───
+loadWorkers();
+loadSites();
+// Ensure all modals are hidden on load
+['add-modal'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('show');
+});
+const _siteModal = document.getElementById('site-modal');
+if (_siteModal) _siteModal.style.display = 'none';
+// Backdrop close for engineer add modal
+document.addEventListener('DOMContentLoaded', () => {
+  const engM = document.getElementById('eng-add-modal');
+  if (engM) engM.addEventListener('click', e => { if (e.target === engM) closeEngAddWorker(); });
+  const bulkM = document.getElementById('bulk-reassign-modal');
+  if (bulkM) bulkM.addEventListener('click', e => { if (e.target === bulkM) closeBulkReassign(); });
+  const noteM = document.getElementById('worker-note-modal');
+  if (noteM) noteM.addEventListener('click', e => { if (e.target === noteM) closeNoteModal(); });
+  const summaryM = document.getElementById('daily-summary-modal');
+  if (summaryM) summaryM.addEventListener('click', e => { if (e.target === summaryM) summaryM.style.display = 'none'; });
+  const archiveM = document.getElementById('archive-modal');
+  if (archiveM) archiveM.addEventListener('click', e => { if (e.target === archiveM) closeArchiveModal(); });
+});
+
+// ─── NAV ───
+function goTo(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'owner-dash')    { initDash(); }
+  if (id === 'engineer-dash') { initEngDash(); }
+  if (id === 'worker-checkin') { startClock(); detectGPS(); }
+  // Show engineer mobile nav only on engineer dash
+  const engNav = document.getElementById('eng-mobile-nav');
+  if (engNav) engNav.style.display = id === 'engineer-dash' ? 'flex' : 'none';
+  // Hide AI if leaving owner dash
+  if (id !== 'owner-dash' && aiOpen) toggleAI();
+}
+
+// ─── WORKER LOGIN ───
+function workerLogout() {
+  if (checkedIn) {
+    if (!confirm('You are still checked in. Log out anyway?')) return;
+    checkedIn = false;
+  }
+  // Clear PIN inputs
+  ['p0','p1','p2','p3'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('worker-name-input').value = '';
+  document.getElementById('worker-site-select').value = '';
+  currentWorker = {name:'', site:''};
+  faceVerified = false;
+  goTo('worker-login');
+}
+
+function workerLogin() {
+  const site = document.getElementById('worker-site-select').value;
+  const name = document.getElementById('worker-name-input').value.trim();
+  const pin = ['p0','p1','p2','p3'].map(id => document.getElementById(id).value).join('');
+  if (!site) { toast('Please select your site'); return; }
+  if (!name) { toast('Please enter your name'); return; }
+  if (pin.length < 4) { toast('Enter your 4-digit PIN'); return; }
+  if (pin !== '1234') { toast('Incorrect PIN — try 1234'); return; }
+  currentWorker = {name, site};
+  document.getElementById('wc-worker-name').textContent = name;
+  document.getElementById('wc-site-name').textContent = site;
+  goTo('worker-checkin');
+}
+
+// PIN auto-advance
+document.querySelectorAll('.pin-digit').forEach((el, i) => {
+  el.addEventListener('input', () => {
+    if (el.value.length === 1 && i < 3) document.getElementById('p'+(i+1)).focus();
+  });
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && el.value === '' && i > 0) document.getElementById('p'+(i-1)).focus();
+  });
+});
+
+// ─── CLOCK ───
+function startClock() {
+  function tick() {
+    const now = new Date();
+    document.getElementById('wc-clock').textContent =
+      now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+    document.getElementById('wc-date').textContent =
+      now.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long'});
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ─── GPS ───
+function getSiteCoords(name) {
+  const s = SITES.find(x => x.name === name);
+  if (!s || !s.lat) return null;
+  return { lat: s.lat, lng: s.lng, radius: s.radius || 300 };
+}
+
+function haversineDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function detectGPS() {
+  const card = document.getElementById('gps-status-card');
+  const title = document.getElementById('gps-title');
+  const sub = document.getElementById('gps-sub');
+  title.textContent = 'Detecting location…';
+  sub.textContent = 'Please allow location access';
+  card.style.borderColor = '';
+
+  if (!navigator.geolocation) {
+    title.textContent = 'GPS not supported';
+    sub.textContent = 'Manual check-in only';
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      const site = getSiteCoords(currentWorker.site);
+      if (!site) {
+        title.textContent = 'Location verified';
+        sub.textContent = currentWorker.site;
+        card.style.borderColor = 'var(--c-green)';
+        return;
+      }
+      const dist = Math.round(haversineDistance(latitude, longitude, site.lat, site.lng));
+      if (dist <= site.radius) {
+        title.textContent = 'On site — verified';
+        sub.textContent = currentWorker.site + ' · ' + dist + 'm from site';
+        card.style.borderColor = 'var(--c-green)';
+      } else {
+        title.textContent = 'Outside site boundary';
+        sub.textContent = dist + 'm away — check-in flagged';
+        card.style.borderColor = 'var(--c-red)';
+      }
+    },
+    (err) => {
+      title.textContent = 'Location access denied';
+      sub.textContent = 'Enable location for GPS check-in';
+      card.style.borderColor = 'var(--c-amber)';
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+// ─── CHECKIN TOGGLE ───
+function toggleCheckin() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  const log = document.getElementById('activity-log');
+  if (!checkedIn) {
+    checkedIn = true;
+    checkInTime = now;
+    document.getElementById('main-checkin-btn').classList.add('checked-in');
+    document.getElementById('checkin-icon').innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    document.getElementById('checkin-text').textContent = 'Punch Out';
+    document.getElementById('checkin-sub').textContent = 'Tap to check out of your shift';
+    document.getElementById('wc-status-badge').textContent = 'CHECKED IN';
+    document.getElementById('wc-status-badge').className = 'wc-status-badge status-in';
+    log.innerHTML = `<div class="log-entry"><div class="log-dot in"></div><div class="log-label">Punched in</div><div class="log-time">${timeStr}</div></div>`;
+    toast('Checked in at ' + timeStr);
+  } else {
+    checkedIn = false;
+    const mins = Math.round((now - checkInTime) / 60000);
+    const hrs = (mins/60).toFixed(1);
+    document.getElementById('main-checkin-btn').classList.remove('checked-in');
+    document.getElementById('checkin-icon').innerHTML = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8,12 11,15 16,9"/></svg>';
+    document.getElementById('checkin-text').textContent = 'Punch In';
+    document.getElementById('checkin-sub').textContent = 'Tap to check in to your shift';
+    document.getElementById('wc-status-badge').textContent = 'NOT CHECKED IN';
+    document.getElementById('wc-status-badge').className = 'wc-status-badge status-out';
+    log.innerHTML += `<div class="log-entry"><div class="log-dot out"></div><div class="log-label">Punched out</div><div class="log-time">${timeStr}</div></div>
+      <div class="log-entry"><div class="log-dot in" style="background:var(--c-gray-400)"></div><div class="log-label">Total time</div><div class="log-time">${hrs}h</div></div>`;
+    toast('Checked out — ' + hrs + ' hours logged');
+  }
+}
+
+// ─── OWNER LOGIN ───
+function ownerLogin() {
+  toast('Signing in…');
+  setTimeout(() => goTo('owner-dash'), 600);
+}
+
+// ═══════════════════════════════════════════════
+// ─── SITE ENGINEER SYSTEM ───────────────────────
+// ═══════════════════════════════════════════════
+
+let engineers = [];
+let currentEngineer = null;
+let currentEngSiteIndex = 0; // index into currentEngineer.siteIndices
+
+function loadEngineers() {
+  try {
+    const saved = localStorage.getItem('spaceo_engineers');
+    if (saved) {
+      engineers = JSON.parse(saved);
+      // Migrate old single-site format
+      engineers.forEach(e => {
+        if (e.siteIndex !== undefined && !e.siteIndices) {
+          e.siteIndices = [e.siteIndex];
+          delete e.siteIndex;
+        }
+        if (!e.siteIndices) e.siteIndices = [];
+      });
+    } else {
+      engineers = [{ id: 'engineer@spaceo.ae', pass: 'eng123', name: 'Site Engineer', siteIndices: [0] }];
+      saveEngineers();
+    }
+  } catch(e) { engineers = []; }
+}
+
+function saveEngineers() {
+  try { localStorage.setItem('spaceo_engineers', JSON.stringify(engineers)); } catch(e) {}
+}
+
+function engineerLogin() {
+  const id   = document.getElementById('eng-id').value.trim();
+  const pass = document.getElementById('eng-pass').value.trim();
+  const eng  = engineers.find(e => e.id === id && e.pass === pass);
+  if (!eng) { toast('Invalid credentials'); return; }
+  currentEngineer = eng;
+  currentEngSiteIndex = 0;
+  toast('Welcome, ' + eng.name);
+  setTimeout(() => { goTo('engineer-dash'); initEngDash(); }, 400);
+}
+
+function getEngSites() {
+  if (!currentEngineer) return [];
+  const idxs = currentEngineer.siteIndices || [];
+  return idxs.map(i => SITES[i]).filter(Boolean);
+}
+
+function getActiveSite() {
+  const sites = getEngSites();
+  return sites[currentEngSiteIndex] || sites[0] || null;
+}
+
+function switchEngSite(idx) {
+  currentEngSiteIndex = parseInt(idx);
+  // Keep both selects in sync
+  const desktopSel = document.getElementById('eng-site-select');
+  const mobSel     = document.getElementById('eng-mob-site-select');
+  if (desktopSel) desktopSel.value = idx;
+  if (mobSel)     mobSel.value     = idx;
+  updateEngHeader();
+  renderEngOverview();
+  renderEngWorkers();
+  renderEngGeofence();
+  renderEngAttendance();
+}
+
+function initEngDash() {
+  const eng   = currentEngineer;
+  const sites = getEngSites();
+
+  // Sidebar label
+  document.getElementById('eng-sb-section-label').textContent =
+    sites.length > 1 ? 'My Sites' : 'My Site';
+
+  // Site switcher — desktop sidebar and mobile strip
+  const switcher    = document.getElementById('eng-site-switcher');
+  const sel         = document.getElementById('eng-site-select');
+  const mobStrip    = document.getElementById('eng-mob-site-strip');
+  const mobSel      = document.getElementById('eng-mob-site-select');
+  if (sites.length > 1) {
+    const opts = sites.map((s,i) => `<option value="${i}">${s.name.split('—')[0].trim()}</option>`).join('');
+    switcher.style.display  = 'block';
+    sel.innerHTML           = opts;
+    sel.value               = '0';
+    mobStrip.style.display  = 'block';
+    mobSel.innerHTML        = opts;
+    mobSel.value            = '0';
+  } else {
+    switcher.style.display  = 'none';
+    mobStrip.style.display  = 'none';
+  }
+
+  document.getElementById('eng-user-name').textContent = eng.name;
+  const _dl = document.getElementById('eng-date-line');
+  if (_dl) _dl.textContent = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+
+  updateEngHeader();
+  renderEngOverview();
+  renderEngWorkers();
+  renderEngGeofence();
+  renderEngAttendance();
+}
+
+function updateEngHeader() {
+  const site   = getActiveSite();
+  const sites  = getEngSites();
+  const siteName = site ? site.name.split('—')[0].trim() : 'No site assigned';
+
+  document.getElementById('eng-site-title').textContent = siteName;
+  document.getElementById('eng-user-site').textContent  =
+    sites.length > 1 ? `${sites.length} sites managed` : siteName;
+  const geoName = document.getElementById('eng-geo-site-name');
+  if (geoName) geoName.textContent = siteName;
+}
+
+function getEngSiteWorkers() {
+  const site = getActiveSite();
+  if (!site) return [];
+  return workers.filter(w => w.site === site.name);
+}
+
+function renderEngOverview() {
+  const sw      = getEngSiteWorkers();
+  const present = sw.filter(w => w.status === 'In').length;
+  const late    = sw.filter(w => w.status === 'Late').length;
+  const absent  = sw.filter(w => w.status === 'Absent').length;
+  const total   = sw.length;
+  const pct     = total ? Math.round((present + late) / total * 100) : 0;
+  document.getElementById('eng-d-present').textContent = present;
+  document.getElementById('eng-d-late').textContent    = late;
+  document.getElementById('eng-d-absent').textContent  = absent;
+  document.getElementById('eng-d-total').textContent   = total;
+  document.getElementById('eng-att-fill').style.width  = pct + '%';
+  document.getElementById('eng-att-pct').textContent   = pct + '%';
+  const list   = document.getElementById('eng-live-list');
+  const onsite = sw.filter(w => w.status === 'In' || w.status === 'Late');
+  if (onsite.length === 0) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--c-gray-400);padding:12px 0;">No workers on site yet.</div>';
+    return;
+  }
+  list.innerHTML = onsite.map((w, i) => `
+    <div class="worker-row">
+      ${w.photo
+        ? `<img src="${w.photo}" class="worker-photo-thumb" onclick="viewWorkerPhoto('${w.name}')" title="View photo">`
+        : `<div class="wr-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${initials(w.name)}</div>`}
+      <div class="wr-info"><div class="wr-name">${w.name}</div><div class="wr-role">${w.role}</div></div>
+      <div style="text-align:right;">
+        <span class="wr-badge ${w.status==='Late'?'late':'in'}">${w.status==='Late'?'Late':'On Site'}</span>
+        <div class="wr-time" style="margin-top:4px;">${w.in||''}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderEngWorkers() {
+  const sw    = getEngSiteWorkers();
+  const tbody = document.getElementById('eng-workers-body');
+  if (!tbody) return;
+  if (sw.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--c-gray-400);font-size:13px;">No workers assigned to this site yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = sw.map((w, i) => {
+    const badge     = w.status==='In'?'in':w.status==='Late'?'late':'out';
+    const label     = w.status==='In'?'On Site':w.status;
+    const wi        = workers.indexOf(w);
+    const photoCell = w.photo
+      ? `<img src="${w.photo}" class="worker-photo-thumb" onclick="viewWorkerPhoto('${w.name}')" title="View photo">`
+      : `<div class="no-photo-thumb" onclick="promptUploadPhoto(${wi})" title="Upload photo">📷</div>`;
+    const noteIcon = w.note
+      ? `<span title="${w.note.text}" style="margin-left:4px;font-size:11px;cursor:pointer;" onclick="showNoteModal(${wi})">📌</span>`
+      : '';
+    return `<tr>
+      <td><div style="display:flex;align-items:center;gap:10px;">
+        <div class="wr-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]};width:30px;height:30px;font-size:11px;">${initials(w.name)}</div>
+        <div><div style="font-weight:600;font-size:13px;">${w.name}${noteIcon}</div><div style="font-size:11px;color:var(--c-gray-400);">${w.role}</div></div>
+      </div></td>
+      <td><span class="wr-badge ${badge}">${label}</span></td>
+      <td>${w.in||'—'}</td>
+      <td>${w.hours?w.hours.toFixed(1)+'h':'—'}</td>
+      <td>${photoCell}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderEngGeofence() {
+  const site   = getActiveSite();
+  const status = document.getElementById('eng-geo-status');
+  if (!site) { if(status) status.textContent='No site assigned.'; return; }
+  if (site.lat && site.lng) {
+    status.innerHTML = `<span style="color:var(--c-green);font-weight:600;">✓ Geofence active</span> — ${Number(site.lat).toFixed(5)}, ${Number(site.lng).toFixed(5)} · Radius: ${site.radius||300}m`;
+    document.getElementById('eng-lat').value    = site.lat;
+    document.getElementById('eng-lng').value    = site.lng;
+    document.getElementById('eng-radius').value = site.radius||300;
+  } else {
+    status.innerHTML = '<span style="color:var(--c-amber);font-weight:600;">⚠ No geofence set</span> — workers can check in from anywhere.';
+    document.getElementById('eng-lat').value    = '';
+    document.getElementById('eng-lng').value    = '';
+    document.getElementById('eng-radius').value = '';
+  }
+}
+
+// ─── ATTENDANCE MANUAL OVERRIDE ───
+function renderEngAttendance() {
+  const sw   = getEngSiteWorkers();
+  const list = document.getElementById('eng-attendance-list');
+  if (!list) return;
+  if (sw.length === 0) {
+    list.innerHTML = '<div class="panel" style="text-align:center;padding:40px;color:var(--c-gray-400);font-size:13px;">No workers assigned to this site.</div>';
+    return;
+  }
+  list.innerHTML = sw.map((w, i) => {
+    const wi      = workers.indexOf(w);
+    const badge   = w.status==='In'?'in':w.status==='Late'?'late':'out';
+    const label   = w.status==='In'?'On Site':w.status;
+    const flagHtml = w.note && w.note.flag
+      ? `<span style="font-size:11px;margin-left:6px;">${{injury:'🔴',early:'🟠',equipment:'🔵',disciplinary:'⚫',other:'⚪'}[w.note.flag]||''}</span>`
+      : '';
+    return `<div class="panel" style="margin-bottom:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <div class="wr-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]};flex-shrink:0;">${initials(w.name)}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:600;font-size:14px;">${w.name}${flagHtml}</div>
+        <div style="font-size:12px;color:var(--c-gray-400);">${w.role}</div>
+        ${w.note ? `<div style="font-size:11px;color:var(--c-gray-600);margin-top:2px;font-style:italic;">"${w.note.text}"</div>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+        <span class="wr-badge ${badge}">${label}</span>
+        <div style="display:flex;gap:6px;">
+          <button onclick="manualStatus(${wi},'In')" style="padding:4px 10px;font-size:11px;background:${w.status==='In'?'var(--c-green)':'var(--c-gray-100)'};color:${w.status==='In'?'#fff':'var(--c-black)'};border:1px solid var(--c-gray-200);border-radius:6px;cursor:pointer;font-family:var(--font-body);">✓ In</button>
+          <button onclick="manualStatus(${wi},'Late')" style="padding:4px 10px;font-size:11px;background:${w.status==='Late'?'#D97706':'var(--c-gray-100)'};color:${w.status==='Late'?'#fff':'var(--c-black)'};border:1px solid var(--c-gray-200);border-radius:6px;cursor:pointer;font-family:var(--font-body);">Late</button>
+          <button onclick="manualStatus(${wi},'Absent')" style="padding:4px 10px;font-size:11px;background:${w.status==='Absent'?'var(--c-red)':'var(--c-gray-100)'};color:${w.status==='Absent'?'#fff':'var(--c-black)'};border:1px solid var(--c-gray-200);border-radius:6px;cursor:pointer;font-family:var(--font-body);">Absent</button>
+          <button onclick="showNoteModal(${wi})" style="padding:4px 10px;font-size:11px;background:var(--c-gray-100);border:1px solid var(--c-gray-200);border-radius:6px;cursor:pointer;font-family:var(--font-body);">📌 Note</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function manualStatus(workerIndex, newStatus) {
+  workers[workerIndex].status = newStatus;
+  if (newStatus === 'In' && !workers[workerIndex].in) {
+    workers[workerIndex].in = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  }
+  saveWorkers();
+  renderEngAttendance();
+  renderEngOverview();
+  toast(workers[workerIndex].name + ' marked ' + newStatus);
+}
+
+// ─── WORKER NOTES ───
+let notingWorkerIndex = -1;
+
+function showNoteModal(wi) {
+  notingWorkerIndex = wi;
+  const w = workers[wi];
+  document.getElementById('note-modal-title').textContent = 'Note for ' + w.name;
+  document.getElementById('note-worker-info').innerHTML =
+    `<strong>${w.name}</strong> · ${w.role}<br>Status: ${w.status} · Site: ${w.site.split('—')[0].trim()}`;
+  document.getElementById('note-text').value  = w.note ? w.note.text  : '';
+  document.getElementById('note-flag').value  = w.note ? w.note.flag  : '';
+  document.getElementById('worker-note-modal').style.display = 'flex';
+}
+
+function closeNoteModal() {
+  document.getElementById('worker-note-modal').style.display = 'none';
+}
+
+function saveWorkerNote() {
+  const text = document.getElementById('note-text').value.trim();
+  const flag = document.getElementById('note-flag').value;
+  if (!text) { workers[notingWorkerIndex].note = null; }
+  else { workers[notingWorkerIndex].note = { text, flag, time: new Date().toISOString() }; }
+  saveWorkers();
+  closeNoteModal();
+  renderEngWorkers();
+  renderEngAttendance();
+  toast(text ? 'Note saved ✓' : 'Note cleared');
+}
+
+// ─── DAILY SUMMARY ───
+function showEngDailySummary() {
+  const site   = getActiveSite();
+  const sw     = getEngSiteWorkers();
+  const today  = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const present = sw.filter(w => w.status==='In');
+  const late    = sw.filter(w => w.status==='Late');
+  const absent  = sw.filter(w => w.status==='Absent');
+  const totalH  = sw.reduce((s,w) => s+(w.hours||0), 0);
+  const flagged = sw.filter(w => w.note);
+
+  const listItems = (arr) => arr.length
+    ? arr.map(w => `<div style="padding:4px 0;border-bottom:1px solid var(--c-gray-100);display:flex;justify-content:space-between;"><span>${w.name} <span style="color:var(--c-gray-400);font-size:12px;">(${w.role})</span></span><span style="font-size:12px;color:var(--c-gray-400);">${w.in||'—'} · ${w.hours?w.hours.toFixed(1)+'h':'0h'}</span></div>`).join('')
+    : '<div style="color:var(--c-gray-400);font-size:12px;padding:4px 0;">None</div>';
+
+  document.getElementById('daily-summary-body').innerHTML = `
+    <div style="background:var(--c-gray-50);border-radius:8px;padding:14px 16px;margin-bottom:16px;">
+      <div style="font-size:13px;color:var(--c-gray-400);">${today}</div>
+      <div style="font-family:var(--font-head);font-size:18px;font-weight:700;">${site ? site.name.split('—')[0].trim() : 'All Sites'}</div>
+      <div style="display:flex;gap:20px;margin-top:10px;">
+        <div><div style="font-size:11px;color:var(--c-gray-400);">Present</div><div style="font-size:20px;font-weight:800;color:var(--c-green);">${present.length}</div></div>
+        <div><div style="font-size:11px;color:var(--c-gray-400);">Late</div><div style="font-size:20px;font-weight:800;color:#D97706;">${late.length}</div></div>
+        <div><div style="font-size:11px;color:var(--c-gray-400);">Absent</div><div style="font-size:20px;font-weight:800;color:var(--c-red);">${absent.length}</div></div>
+        <div><div style="font-size:11px;color:var(--c-gray-400);">Total Hrs</div><div style="font-size:20px;font-weight:800;">${totalH.toFixed(1)}h</div></div>
+      </div>
+    </div>
+    <div style="font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--c-gray-400);letter-spacing:0.08em;margin-bottom:8px;">✅ PRESENT (${present.length})</div>
+    ${listItems(present)}
+    <div style="font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--c-gray-400);letter-spacing:0.08em;margin:14px 0 8px;">🟠 LATE (${late.length})</div>
+    ${listItems(late)}
+    <div style="font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--c-gray-400);letter-spacing:0.08em;margin:14px 0 8px;">🔴 ABSENT (${absent.length})</div>
+    ${listItems(absent)}
+    ${flagged.length ? `<div style="font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--c-gray-400);letter-spacing:0.08em;margin:14px 0 8px;">📌 FLAGGED WORKERS (${flagged.length})</div>
+    ${flagged.map(w=>`<div style="padding:6px 0;border-bottom:1px solid var(--c-gray-100);"><strong>${w.name}</strong> — ${w.note.text} ${w.note.flag?'<span style="font-size:11px;">('+w.note.flag+')</span>':''}</div>`).join('')}` : ''}
+    <div style="margin-top:16px;font-size:11px;color:var(--c-gray-400);">Report prepared by: ${currentEngineer.name} · ${today}</div>
+  `;
+  document.getElementById('daily-summary-modal').style.display = 'flex';
+}
+
+function exportDailySummaryPDF() {
+  const site   = getActiveSite();
+  const sw     = getEngSiteWorkers();
+  const today  = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const siteName = site ? site.name.split('—')[0].trim() : 'All Sites';
+  const present  = sw.filter(w => w.status==='In');
+  const late     = sw.filter(w => w.status==='Late');
+  const absent   = sw.filter(w => w.status==='Absent');
+  const totalH   = sw.reduce((s,w) => s+(w.hours||0), 0);
+  const flagged  = sw.filter(w => w.note);
+
+  const tableRows = sw.map(w => {
+    const st = w.status==='In'?'<span class="badge badge-green">On Site</span>':w.status==='Late'?'<span class="badge badge-amber">Late</span>':'<span class="badge badge-red">Absent</span>';
+    const noteStr = w.note ? `<div style="font-size:10px;color:#888;margin-top:2px;">📌 ${w.note.text}</div>` : '';
+    return `<tr><td style="font-weight:600;">${w.name}${noteStr}</td><td style="color:#666;">${w.role}</td><td>${st}</td><td>${w.in||'—'}</td><td style="font-weight:600;">${w.hours?w.hours.toFixed(1)+'h':'0h'}</td></tr>`;
+  }).join('');
+
+  const summaryGrid = `<div class="summary-grid">
+    <div class="sum-card accent"><div class="sum-label">Present</div><div class="sum-value green">${present.length}</div></div>
+    <div class="sum-card"><div class="sum-label">Late</div><div class="sum-value amber">${late.length}</div></div>
+    <div class="sum-card"><div class="sum-label">Absent</div><div class="sum-value red">${absent.length}</div></div>
+    <div class="sum-card"><div class="sum-label">Total Hours</div><div class="sum-value">${totalH.toFixed(1)}h</div></div>
+  </div>`;
+
+  const flagSection = flagged.length ? `
+    <div class="section-header" style="margin-top:24px;"><div class="section-title">Flagged Workers</div><div class="section-rule"></div></div>
+    <table><thead><tr><th>Worker</th><th>Flag</th><th>Note</th><th>Time</th></tr></thead>
+    <tbody>${flagged.map(w=>`<tr><td style="font-weight:600;">${w.name}</td><td>${w.note.flag||'other'}</td><td style="color:#666;">${w.note.text}</td><td style="color:#999;">${w.note.time?new Date(w.note.time).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'—'}</td></tr>`).join('')}</tbody></table>` : '';
+
+  const bodyHTML = `${summaryGrid}
+    <div class="section-header"><div class="section-title">Attendance Breakdown</div><div class="section-rule"></div></div>
+    <table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Punch In</th><th>Hours</th></tr></thead>
+    <tbody>${tableRows}</tbody>
+    <tfoot><tr><td colspan="4" style="font-weight:700;">TOTAL — ${sw.length} workers</td><td style="font-weight:700;">${totalH.toFixed(1)}h</td></tr></tfoot></table>
+    ${flagSection}
+    <p style="font-size:10px;color:#bbb;margin-top:20px;">Prepared by: ${currentEngineer.name} · ${today}</p>`;
+
+  document.getElementById('daily-summary-modal').style.display = 'none';
+  openPDFWindow(getPDFShell(siteName + ' — Daily Summary', today, bodyHTML));
+}
+
+function showEngTab(tab, el) {
+  ['overview','workers','geofence','attendance'].forEach(t => {
+    const panel = document.getElementById('eng-tab-' + t);
+    if (panel) panel.style.display = t === tab ? '' : 'none';
+    const btn = document.getElementById('eng-tab-btn-' + t);
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+  if (tab === 'workers')    renderEngWorkers();
+  if (tab === 'geofence')   renderEngGeofence();
+  if (tab === 'overview')   renderEngOverview();
+  if (tab === 'attendance') renderEngAttendance();
+}
+
+function engDetectLocation() {
+  if (!navigator.geolocation) { toast('GPS not available'); return; }
+  toast('Detecting location…');
+  navigator.geolocation.getCurrentPosition(pos => {
+    document.getElementById('eng-lat').value    = pos.coords.latitude.toFixed(6);
+    document.getElementById('eng-lng').value    = pos.coords.longitude.toFixed(6);
+    if (!document.getElementById('eng-radius').value) document.getElementById('eng-radius').value = 300;
+    toast('Location detected ✓');
+  }, () => toast('Could not get location'));
+}
+
+function engSaveGeofence() {
+  const lat    = parseFloat(document.getElementById('eng-lat').value);
+  const lng    = parseFloat(document.getElementById('eng-lng').value);
+  const radius = parseInt(document.getElementById('eng-radius').value) || 300;
+  if (!lat || !lng) { toast('Enter valid coordinates'); return; }
+  const site = getActiveSite();
+  if (!site) { toast('No site assigned'); return; }
+  site.lat = lat; site.lng = lng; site.radius = radius;
+  saveSitesToStorage();
+  renderEngGeofence();
+  toast('Geofence saved ✓');
+}
+
+// ─── ENGINEER ADD WORKER ───
+let engNewPhotoData = null;
+
+function showEngAddWorker() {
+  engNewPhotoData = null;
+  ['eng-new-first','eng-new-last','eng-new-pin'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  const prev = document.getElementById('eng-photo-preview');
+  const plac = document.getElementById('eng-photo-placeholder');
+  if(prev) prev.style.display = 'none';
+  if(plac) plac.style.display = '';
+  document.getElementById('eng-add-modal').style.display = 'flex';
+}
+
+function closeEngAddWorker() {
+  document.getElementById('eng-add-modal').style.display = 'none';
+}
+
+function engPhotoSelected(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    engNewPhotoData = e.target.result;
+    document.getElementById('eng-photo-img').src = engNewPhotoData;
+    document.getElementById('eng-photo-preview').style.display = '';
+    document.getElementById('eng-photo-placeholder').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function engAddWorker() {
+  const first = document.getElementById('eng-new-first').value.trim();
+  const last  = document.getElementById('eng-new-last').value.trim();
+  const role  = document.getElementById('eng-new-role').value;
+  const pin   = document.getElementById('eng-new-pin').value.trim();
+  if (!first || !last) { toast('Enter worker name'); return; }
+  if (!pin || pin.length !== 4) { toast('PIN must be 4 digits'); return; }
+  const site = getActiveSite();
+  if (!site) { toast('No site assigned to you'); return; }
+  workers.push({ name: first+' '+last, role, site: site.name, in:'', hours:0, status:'Absent', pin, photo: engNewPhotoData||null });
+  saveWorkers();
+  refreshSiteDropdowns();
+  closeEngAddWorker();
+  renderEngWorkers();
+  renderEngOverview();
+  toast(first+' '+last+' added ✓');
+}
+
+function promptUploadPhoto(workerIndex) {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*'; input.capture = 'user';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      workers[workerIndex].photo = ev.target.result;
+      saveWorkers();
+      renderEngWorkers();
+      toast('Photo saved ✓');
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function viewWorkerPhoto(name) {
+  const w = workers.find(x => x.name === name);
+  if (!w || !w.photo) return;
+  document.getElementById('photo-view-img').src = w.photo;
+  document.getElementById('photo-view-name').textContent = w.name;
+  document.getElementById('photo-view-role').textContent = w.role;
+  document.getElementById('photo-view-modal').style.display = 'flex';
+}
+
+// ─── ENGINEER MOBILE NAV ───
+function engMobTab(tab, el) {
+  // Sync with desktop tab system
+  showEngTab(tab, document.getElementById('eng-tab-btn-' + tab));
+  // Update mobile nav active state
+  ['overview','workers','attendance','geofence','more'].forEach(t => {
+    const btn = document.getElementById('eng-mob-btn-' + t);
+    if (btn) btn.classList.toggle('active', t === tab);
+  });
+}
+
+function showEngMobMore() {
+  document.getElementById('eng-more-sheet').style.display = 'flex';
+}
+
+function closeEngMobMore() {
+  document.getElementById('eng-more-sheet').style.display = 'none';
+}
+
+// ─── ENGINEER STARTUP ───
+loadEngineers();
+
+
+// ─── DASHBOARD ───
+function initDash() {
+  renderLiveWorkers();
+  renderSitesOverview();
+  renderWorkersTable(workerTableFilter);
+  renderSitesFull();
+  renderTopWorkers();
+  renderWeeklyChart();
+  updateDashStats();
+}
+
+function updateDashStats() {
+  const filtered = dashFilter === 'all' ? workers : workers.filter(w => w.site === dashFilter);
+  const total = filtered.length;
+  const present = filtered.filter(w => w.status === 'In').length;
+  const late = filtered.filter(w => w.status === 'Late').length;
+  const absent = filtered.filter(w => w.status === 'Absent').length;
+  const pct = Math.round((present + late) / total * 100);
+  document.getElementById('d-total').textContent = total;
+  document.getElementById('d-present').textContent = present;
+  document.getElementById('d-late').textContent = late;
+  document.getElementById('d-absent').textContent = absent;
+  document.getElementById('d-att-fill').style.width = pct + '%';
+  document.getElementById('d-att-pct').textContent = pct + '%';
+}
+
+function filterBySite(site) {
+  dashFilter = site;
+  updateDashStats();
+  renderLiveWorkers();
+  renderSitesOverview();
+}
+
+function initials(name) {
+  return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+}
+
+function renderLiveWorkers() {
+  const list = document.getElementById('live-workers-list');
+  const filtered = (dashFilter === 'all' ? workers : workers.filter(w=>w.site===dashFilter))
+    .filter(w => w.status === 'In' || w.status === 'Late').slice(0,6);
+  const flagIcons = {injury:'🔴',early:'🟠',equipment:'🔵',disciplinary:'⚫',other:'⚪'};
+  list.innerHTML = filtered.length === 0
+    ? '<div style="font-size:13px;color:var(--c-gray-400);padding:8px 0;">No workers checked in yet.</div>'
+    : filtered.map((w,i) => `
+    <div class="worker-row">
+      <div class="wr-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${initials(w.name)}</div>
+      <div class="wr-info">
+        <div class="wr-name">${w.name}${w.note ? `<span title="${w.note.text}" style="margin-left:5px;font-size:12px;">${flagIcons[w.note.flag]||'📌'}</span>` : ''}</div>
+        <div class="wr-role">${w.role}</div>
+      </div>
+      <div style="text-align:right;">
+        <div><span class="wr-badge ${w.status === 'Late' ? 'late' : 'in'}">${w.status === 'Late' ? 'Late' : 'On Site'}</span></div>
+        <div class="wr-time" style="margin-top:4px;">${w.in}</div>
+      </div>
+    </div>`).join('');
+
+  // Flagged workers panel — show on overview if any flags exist
+  const flagged = workers.filter(w => w.note);
+  const flagPanel = document.getElementById('flagged-workers-panel');
+  if (flagPanel) {
+    if (flagged.length > 0) {
+      flagPanel.style.display = '';
+      flagPanel.innerHTML = `<div class="panel-title">⚑ Flagged Workers <span style="font-size:11px;font-weight:400;color:var(--c-gray-400);">raised by site engineers</span></div>` +
+        flagged.map(w => `
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--c-gray-100);">
+            <div style="font-size:20px;line-height:1;margin-top:2px;">${flagIcons[w.note.flag]||'📌'}</div>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:13px;">${w.name} <span style="font-weight:400;color:var(--c-gray-400);font-size:11px;">${w.role} · ${w.site.split('—')[0].trim()}</span></div>
+              <div style="font-size:12px;color:var(--c-gray-600);margin-top:2px;">"${w.note.text}"</div>
+              ${w.note.time ? `<div style="font-size:10px;color:var(--c-gray-400);margin-top:2px;">${new Date(w.note.time).toLocaleString('en-GB',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'})}</div>` : ''}
+            </div>
+          </div>`).join('');
+    } else {
+      flagPanel.style.display = 'none';
+    }
+  }
+}
+
+function renderSitesOverview() {
+  const list = document.getElementById('sites-overview-list');
+  list.innerHTML = SITES.map(s => {
+    const onsite = workers.filter(w => w.site === s.name && (w.status === 'In' || w.status === 'Late')).length;
+    return `<div class="site-row">
+      <div class="site-info">
+        <div class="site-live-dot"></div>
+        <div>
+          <div class="site-name-text">${s.name.split('—')[0].trim()}</div>
+          <div class="site-loc">${s.loc}</div>
+        </div>
+      </div>
+      <div class="site-count">${onsite} <span>/ ${s.capacity}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ─── BULK SELECTION ───
+let selectedWorkerIndices = new Set();
+
+function updateBulkBar() {
+  const bar   = document.getElementById('bulk-bar');
+  const count = document.getElementById('bulk-count');
+  const selAll = document.getElementById('select-all-cb');
+  const n = selectedWorkerIndices.size;
+  bar.style.display = n > 0 ? 'flex' : 'none';
+  if (count) count.textContent = n + ' worker' + (n !== 1 ? 's' : '') + ' selected';
+  // Update select-all checkbox state
+  if (selAll) {
+    const list = workerTableFilter === 'all' ? workers : workers.filter(w => w.status === workerTableFilter);
+    selAll.indeterminate = n > 0 && n < list.length;
+    selAll.checked = n > 0 && n === list.length;
+  }
+}
+
+function toggleWorkerSelect(realIndex, cb) {
+  if (cb.checked) selectedWorkerIndices.add(realIndex);
+  else selectedWorkerIndices.delete(realIndex);
+  updateBulkBar();
+}
+
+function toggleSelectAll(masterCb) {
+  const list = workerTableFilter === 'all' ? workers : workers.filter(w => w.status === workerTableFilter);
+  list.forEach(w => {
+    const ri = workers.indexOf(w);
+    if (masterCb.checked) selectedWorkerIndices.add(ri);
+    else selectedWorkerIndices.delete(ri);
+  });
+  // Sync all row checkboxes
+  document.querySelectorAll('.worker-row-cb').forEach(cb => { cb.checked = masterCb.checked; });
+  updateBulkBar();
+}
+
+function clearBulkSelection() {
+  selectedWorkerIndices.clear();
+  document.querySelectorAll('.worker-row-cb').forEach(cb => cb.checked = false);
+  const selAll = document.getElementById('select-all-cb');
+  if (selAll) { selAll.checked = false; selAll.indeterminate = false; }
+  updateBulkBar();
+}
+
+function showBulkReassign() {
+  const n = selectedWorkerIndices.size;
+  if (n === 0) { toast('Select workers first'); return; }
+  // Summary of who's being moved and where from
+  const groups = {};
+  selectedWorkerIndices.forEach(i => {
+    const site = workers[i].site.split('—')[0].trim();
+    groups[site] = (groups[site] || []);
+    groups[site].push(workers[i].name);
+  });
+  let summary = `<strong>${n} worker${n!==1?'s':''} selected:</strong><br>`;
+  Object.entries(groups).forEach(([site, names]) => {
+    summary += `• ${names.join(', ')} — currently at <em>${site}</em><br>`;
+  });
+  document.getElementById('bulk-reassign-summary').innerHTML = summary;
+  // Populate site dropdown
+  const sel = document.getElementById('bulk-new-site');
+  sel.innerHTML = SITES.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+  document.getElementById('bulk-reassign-modal').style.display = 'flex';
+}
+
+function closeBulkReassign() {
+  document.getElementById('bulk-reassign-modal').style.display = 'none';
+}
+
+function confirmBulkReassign() {
+  const newSite = document.getElementById('bulk-new-site').value;
+  if (!newSite) { toast('Select a site'); return; }
+  const n = selectedWorkerIndices.size;
+  selectedWorkerIndices.forEach(i => { workers[i].site = newSite; });
+  saveWorkers();
+  clearBulkSelection();
+  closeBulkReassign();
+  renderWorkersTable(workerTableFilter);
+  renderSitesOverview();
+  updateDashStats();
+  refreshSiteDropdowns();
+  toast(`${n} worker${n!==1?'s':''} moved to ${newSite.split('—')[0].trim()} ✓`);
+}
+
+function bulkDelete() {
+  const n = selectedWorkerIndices.size;
+  if (!confirm(`Remove ${n} worker${n!==1?'s':''} from the system? This cannot be undone.`)) return;
+  // Remove in reverse order to keep indices stable
+  const sorted = Array.from(selectedWorkerIndices).sort((a,b) => b - a);
+  sorted.forEach(i => workers.splice(i, 1));
+  saveWorkers();
+  clearBulkSelection();
+  renderWorkersTable(workerTableFilter);
+  updateDashStats();
+  refreshSiteDropdowns();
+  toast(`${n} worker${n!==1?'s':''} removed`);
+}
+
+function renderWorkersTable(filter) {
+  workerTableFilter = filter;
+  const tbody = document.getElementById('workers-table-body');
+  const list = filter === 'all' ? workers : workers.filter(w => w.status === filter);
+  if (list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--c-gray-400);font-size:13px;">
+      ${workers.length === 0 ? 'No workers added yet. Use "Add Worker" to get started.' : 'No workers match this filter.'}
+    </td></tr>`;
+    clearBulkSelection();
+    return;
+  }
+  tbody.innerHTML = list.map((w,i) => {
+    const realIndex = workers.indexOf(w);
+    const badge     = w.status === 'In' ? 'in' : w.status === 'Late' ? 'late' : 'out';
+    const label     = w.status === 'In' ? 'On Site' : w.status;
+    const isChecked = selectedWorkerIndices.has(realIndex);
+    return `<tr id="wrow-${realIndex}" style="${isChecked ? 'background:#FDE8E7;' : ''}">
+      <td style="width:40px;text-align:center;">
+        <input type="checkbox" class="worker-row-cb" ${isChecked ? 'checked' : ''}
+          onchange="toggleWorkerSelect(${realIndex}, this)"
+          style="cursor:pointer;width:15px;height:15px;accent-color:var(--c-green);">
+      </td>
+      <td><div style="display:flex;align-items:center;gap:10px;">
+        <div class="wr-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]};width:30px;height:30px;font-size:11px;">${initials(w.name)}</div>
+        <div><div style="font-weight:500;font-size:13px;">${w.name}</div><div style="font-size:11px;color:var(--c-gray-400);">${w.role}</div></div>
+      </div></td>
+      <td style="font-size:12px;color:var(--c-gray-600);">${w.site.split('—')[0].trim()}</td>
+      <td>${w.in || '—'}</td>
+      <td>${w.hours ? w.hours.toFixed(1)+'h' : '—'}</td>
+      <td><span class="wr-badge ${badge}">${label}</span></td>
+      <td>
+        <div style="display:flex;gap:6px;">
+          <button onclick="showEditWorkerModal(${realIndex})" style="padding:4px 10px;background:var(--c-gray-100);border:1px solid var(--c-gray-200);border-radius:6px;font-size:11px;font-family:var(--font-body);color:var(--c-black);cursor:pointer;">Edit</button>
+          <button onclick="deleteWorker(${realIndex})" style="padding:4px 10px;background:var(--c-red-light);border:1px solid #FECACA;border-radius:6px;font-size:11px;font-family:var(--font-body);color:var(--c-red);cursor:pointer;">Remove</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  updateBulkBar();
+}
+
+function filterWorkerTable(f, btn) {
+  document.querySelectorAll('.ft-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderWorkersTable(f);
+}
+
+// ─── ARCHIVE MODAL ───
+let archivingSiteIndex = -1;
+
+function showArchiveModal(i) {
+  archivingSiteIndex = i;
+  const s        = SITES[i];
+  const assigned = workers.filter(w => w.site === s.name);
+  document.getElementById('archive-site-info').innerHTML =
+    `<strong>${s.name.split('—')[0].trim()}</strong><br>` +
+    `<span style="color:var(--c-gray-400);">${assigned.length} worker${assigned.length!==1?'s':''} currently assigned: ${assigned.map(w=>w.name).join(', ')}</span>`;
+  const sel = document.getElementById('archive-reassign-site');
+  sel.innerHTML = '<option value="">Leave unassigned</option>' +
+    SITES.filter((_,idx) => idx !== i && !SITES[idx].archived)
+         .map(s => `<option value="${s.name}">${s.name.split('—')[0].trim()}</option>`).join('');
+  document.getElementById('archive-modal').style.display = 'flex';
+}
+
+function closeArchiveModal() {
+  document.getElementById('archive-modal').style.display = 'none';
+}
+
+function confirmArchive() {
+  const i       = archivingSiteIndex;
+  const s       = SITES[i];
+  const newSite = document.getElementById('archive-reassign-site').value;
+  // Reassign workers
+  workers.forEach(w => {
+    if (w.site === s.name) w.site = newSite || '';
+  });
+  saveWorkers();
+  // Archive the site
+  SITES[i].archived   = true;
+  SITES[i].archivedAt = new Date().toISOString();
+  saveSitesToStorage();
+  refreshSiteDropdowns();
+  closeArchiveModal();
+  renderSitesFull();
+  renderSitesOverview();
+  updateDashStats();
+  toast(`${s.name.split('—')[0].trim()} archived ✓`);
+}
+
+function renderSitesFull() {
+  const list   = document.getElementById('sites-full-list');
+  const active = SITES.filter(s => !s.archived);
+  const archived = SITES.filter(s => s.archived);
+
+  if (SITES.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:60px 24px;">
+      <div style="font-size:48px;margin-bottom:16px;">🏗️</div>
+      <div style="font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--c-black);margin-bottom:8px;">No sites yet</div>
+      <div style="font-size:13px;color:var(--c-gray-400);margin-bottom:24px;">Add your first project site to get started.</div>
+      <button onclick="showAddSiteModal()" style="padding:12px 24px;background:var(--c-black);color:#fff;border:none;border-radius:var(--radius-sm);font-family:var(--font-head);font-size:14px;font-weight:700;cursor:pointer;">+ Add Site</button>
+    </div>`;
+    return;
+  }
+
+  const renderSiteCard = (s, i, isArchived) => {
+    const siteWorkers = workers.filter(w => w.site === s.name);
+    const onsite  = siteWorkers.filter(w => w.status === 'In' || w.status === 'Late').length;
+    const absent  = siteWorkers.filter(w => w.status === 'Absent').length;
+    const pct     = Math.round(onsite / (siteWorkers.length || 1) * 100);
+    const hasGPS  = s.lat && s.lng;
+    const archivedDate = s.archivedAt
+      ? new Date(s.archivedAt).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})
+      : '';
+
+    if (isArchived) {
+      return `<div class="panel" style="margin-bottom:12px;opacity:0.75;border-left:3px solid var(--c-gray-200);">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;">
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--c-gray-600);">${s.name.split('—')[0].trim()}</div>
+              <span style="background:var(--c-gray-100);color:var(--c-gray-400);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:0.06em;">COMPLETED</span>
+            </div>
+            <div style="font-size:11px;color:var(--c-gray-400);margin-top:2px;">${s.loc||'—'} · Archived ${archivedDate}</div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;margin-left:12px;">
+            <button onclick="exportSiteReportPDF(${i})" style="padding:5px 10px;background:var(--c-gray-100);border:1px solid var(--c-gray-200);border-radius:6px;font-size:11px;font-family:var(--font-body);color:var(--c-black);cursor:pointer;">📄 Report</button>
+            <button onclick="restoreSite(${i})" style="padding:5px 10px;background:var(--c-gray-100);border:1px solid var(--c-gray-200);border-radius:6px;font-size:11px;font-family:var(--font-body);color:var(--c-black);cursor:pointer;">Restore</button>
+            <button onclick="permanentDeleteSite(${i})" style="padding:5px 10px;background:var(--c-red-light);border:1px solid #FECACA;border-radius:6px;font-size:11px;font-family:var(--font-body);color:var(--c-red);cursor:pointer;">Delete</button>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--c-gray-400);">${siteWorkers.length} workers · ${siteWorkers.reduce((s,w)=>s+(w.hours||0),0).toFixed(1)}h total logged · ${hasGPS?'📍 GPS set':'No GPS'}</div>
+      </div>`;
+    }
+
+    return `<div class="panel" style="margin-bottom:16px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--c-black);">${s.name.split('—')[0].trim()}</div>
+            <span style="background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:0.06em;">ACTIVE</span>
+          </div>
+          <div style="font-size:12px;color:var(--c-gray-400);margin-top:2px;">${s.loc||'No location set'}</div>
+          ${hasGPS
+            ? `<div style="font-size:11px;color:var(--c-green);margin-top:4px;">📍 ${Number(s.lat).toFixed(4)}, ${Number(s.lng).toFixed(4)} · ${s.radius}m radius</div>`
+            : `<div style="font-size:11px;color:var(--c-gray-400);margin-top:4px;">📍 No GPS coords set</div>`}
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0;margin-left:12px;">
+          <button onclick="showEditSiteModal(${i})" style="padding:6px 12px;background:var(--c-gray-100);border:1px solid var(--c-gray-200);border-radius:8px;font-size:12px;font-family:var(--font-body);color:var(--c-black);cursor:pointer;">Edit</button>
+          <button onclick="archiveSite(${i})" style="padding:6px 12px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;font-size:12px;font-family:var(--font-body);color:#92400E;cursor:pointer;">✓ Complete</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:20px;margin-bottom:12px;">
+        <div><div style="font-size:11px;color:var(--c-gray-400);">On site</div><div style="font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--c-green);">${onsite}</div></div>
+        <div><div style="font-size:11px;color:var(--c-gray-400);">Absent</div><div style="font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--c-red);">${absent}</div></div>
+        <div><div style="font-size:11px;color:var(--c-gray-400);">Capacity</div><div style="font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--c-black);">${s.capacity||'—'}</div></div>
+        <div><div style="font-size:11px;color:var(--c-gray-400);">Attendance</div><div style="font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--c-black);">${pct}%</div></div>
+      </div>
+      <div class="att-track"><div class="att-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  };
+
+  let html = '';
+
+  // Active sites
+  if (active.length === 0) {
+    html += `<div style="text-align:center;padding:40px 24px;background:#fff;border-radius:var(--radius);border:1px solid var(--c-gray-200);margin-bottom:16px;">
+      <div style="font-size:32px;margin-bottom:12px;">🏗️</div>
+      <div style="font-size:14px;color:var(--c-gray-400);">No active sites. <span style="color:var(--c-green);cursor:pointer;font-weight:600;" onclick="showAddSiteModal()">Add a site →</span></div>
+    </div>`;
+  } else {
+    html += active.map((s,i) => renderSiteCard(s, SITES.indexOf(s), false)).join('');
+  }
+
+  // Archived sites section
+  if (archived.length > 0) {
+    html += `<div style="display:flex;align-items:center;gap:10px;margin:28px 0 14px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--c-gray-400);">Completed Projects (${archived.length})</div>
+      <div style="flex:1;height:1px;background:var(--c-gray-200);"></div>
+    </div>`;
+    html += archived.map(s => renderSiteCard(s, SITES.indexOf(s), true)).join('');
+  }
+
+  list.innerHTML = html;
+}
+
+function exportSiteReportPDF(i) {
+  const s    = SITES[i];
+  const sw   = workers.filter(w => w.site === s.name);
+  const archivedDate = s.archivedAt
+    ? new Date(s.archivedAt).toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'})
+    : 'Unknown';
+  const totalHrs = sw.reduce((sum,w) => sum+(w.hours||0), 0);
+
+  const rows = sw.map(w => `<tr>
+    <td style="font-weight:600;">${w.name}</td>
+    <td style="color:#666;">${w.role}</td>
+    <td style="font-weight:600;">${w.hours?w.hours.toFixed(1)+'h':'0h'}</td>
+    <td style="font-weight:700;">AED ${w.hours?(w.hours*12).toFixed(0):'0'}</td>
+  </tr>`).join('');
+
+  const bodyHTML = `
+    <div class="summary-grid">
+      <div class="sum-card accent"><div class="sum-label">Total Workers</div><div class="sum-value">${sw.length}</div></div>
+      <div class="sum-card"><div class="sum-label">Total Hours</div><div class="sum-value">${totalHrs.toFixed(1)}h</div></div>
+      <div class="sum-card"><div class="sum-label">Est. Labour Cost</div><div class="sum-value">AED ${(totalHrs*12).toFixed(0)}</div></div>
+      <div class="sum-card"><div class="sum-label">Completed</div><div class="sum-value" style="font-size:14px;">${archivedDate}</div></div>
+    </div>
+    <div class="section-header"><div class="section-title">Worker Summary</div><div class="section-rule"></div></div>
+    <table>
+      <thead><tr><th>Name</th><th>Role</th><th>Hours</th><th>Est. Pay</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><td colspan="2" style="font-weight:700;">TOTAL</td><td style="font-weight:700;">${totalHrs.toFixed(1)}h</td><td style="font-weight:700;">AED ${(totalHrs*12).toFixed(0)}</td></tr></tfoot>
+    </table>
+    <p style="font-size:10px;color:#bbb;margin-top:16px;">* Project archived on ${archivedDate}. Rate: AED 12/hr placeholder.</p>`;
+
+  openPDFWindow(getPDFShell(
+    s.name.split('—')[0].trim() + ' — Project Report',
+    `${s.loc||''} · Completed ${archivedDate}`,
+    bodyHTML
+  ));
+}
+
+function renderTopWorkers() {
+  const list = document.getElementById('top-workers-list');
+  const top = workers.filter(w => w.status === 'In').slice(0,5);
+  list.innerHTML = top.map((w,i) => `
+    <div class="worker-row">
+      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--c-gray-400);width:20px;">#${i+1}</div>
+      <div class="wr-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">${initials(w.name)}</div>
+      <div class="wr-info"><div class="wr-name">${w.name}</div><div class="wr-role">${w.role} · ${w.site.split('—')[0].trim()}</div></div>
+      <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--c-green);">${w.hours.toFixed(1)}h</div>
+    </div>
+  `).join('');
+}
+
+function renderWeeklyChart() {
+  const chart = document.getElementById('weekly-att-chart');
+  if (!chart) return;
+  const days = ['Mon','Tue','Wed','Thu','Fri'];
+  const vals = [72,77,80,75,77];
+  chart.innerHTML = days.map((d,i) => `
+    <div style="text-align:center;">
+      <div style="font-size:11px;color:var(--c-gray-400);margin-bottom:6px;">${d}</div>
+      <div style="height:80px;background:var(--c-gray-100);border-radius:8px;position:relative;overflow:hidden;">
+        <div style="position:absolute;bottom:0;left:0;right:0;background:var(--c-green);height:${vals[i]}%;border-radius:8px 8px 0 0;transition:height 0.6s ease;"></div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--c-black);margin-top:4px;">${vals[i]}%</div>
+    </div>
+  `).join('');
+}
+
+function showDashTab(tab, el) {
+  ['overview','workers','sites','reports'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.mn-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (tab === 'workers')   renderWorkersTable(workerTableFilter);
+  if (tab === 'reports') { renderTopWorkers(); renderWeeklyChart(); }
+  if (tab === 'sites') renderSitesFull();
+  if (tab !== 'workers') clearBulkSelection();
+}
+
+// ─── ADD WORKER MODAL ───
+function showAddModal() {
+  document.getElementById('add-modal').classList.add('show');
+}
+function closeAddModal() {
+  document.getElementById('add-modal').classList.remove('show');
+}
+function addWorker() {
+  const first = document.getElementById('new-first').value.trim();
+  const last = document.getElementById('new-last').value.trim();
+  const role = document.getElementById('new-role').value;
+  const site = document.getElementById('new-site').value;
+  const pin = document.getElementById('new-pin').value.trim();
+  if (!first || !last) { toast('Enter worker name'); return; }
+  if (pin.length !== 4) { toast('PIN must be 4 digits'); return; }
+  workers.push({name: first+' '+last, role, site, in:'', hours:0, status:'Absent', pin});
+  saveWorkers();
+  closeAddModal();
+  toast(first+' added successfully');
+  initDash();
+  document.getElementById('new-first').value = '';
+  document.getElementById('new-last').value = '';
+  document.getElementById('new-pin').value = '';
+}
+
+
+// ─── EXPORT CSV ───
+// ─── WORKER EDIT / DELETE ───
+let editingWorkerIndex = -1;
+
+function deleteWorker(i) {
+  const w = workers[i];
+  if (!confirm(`Remove ${w.name} from the system?`)) return;
+  workers.splice(i, 1);
+  saveWorkers();
+  renderWorkersTable(workerTableFilter);
+  updateDashStats();
+  renderLiveWorkers();
+  renderSitesOverview();
+  toast(w.name + ' removed');
+}
+
+function showEditWorkerModal(i) {
+  editingWorkerIndex = i;
+  const w = workers[i];
+  const [first, ...rest] = w.name.split(' ');
+  document.getElementById('ew-first').value = first;
+  document.getElementById('ew-last').value = rest.join(' ');
+  document.getElementById('ew-role').value = w.role;
+  const siteOpts = SITES.map(s => `<option${s.name === w.site ? ' selected' : ''}>${s.name}</option>`).join('');
+  document.getElementById('ew-site').innerHTML = siteOpts || '<option>No sites</option>';
+  document.getElementById('ew-pin').value = '';
+  document.getElementById('edit-worker-modal').style.display = 'flex';
+}
+
+function closeEditWorkerModal() {
+  document.getElementById('edit-worker-modal').style.display = 'none';
+}
+
+function saveEditWorker() {
+  const first = document.getElementById('ew-first').value.trim();
+  const last = document.getElementById('ew-last').value.trim();
+  const role = document.getElementById('ew-role').value;
+  const site = document.getElementById('ew-site').value;
+  const pin = document.getElementById('ew-pin').value.trim();
+  if (!first || !last) { toast('Enter worker name'); return; }
+  if (pin && pin.length !== 4) { toast('PIN must be 4 digits'); return; }
+  const w = workers[editingWorkerIndex];
+  w.name = first + ' ' + last;
+  w.role = role;
+  w.site = site;
+  if (pin) w.pin = pin;
+  saveWorkers();
+  closeEditWorkerModal();
+  renderWorkersTable(workerTableFilter);
+  updateDashStats();
+  toast(w.name + ' updated ✓');
+}
+
+// ─── PAYROLL PDF ───
+// ─── SAFE PDF OPENER (bypasses popup blocker) ───
+function openPDFWindow(htmlContent) {
+  try {
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.target   = '_blank';
+    a.rel      = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    // Revoke after a delay so the new tab has time to load
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  } catch(e) {
+    // Ultimate fallback — data URI
+    const encoded = 'data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent);
+    window.location.href = encoded;
+  }
+}
+
+// ─── SHARED PDF RENDERER ───
+function getPDFShell(title, subtitle, bodyHTML) {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  const timeStr = now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  const docId = 'SPO-' + now.getFullYear() + ('0'+(now.getMonth()+1)).slice(-2) + ('0'+now.getDate()).slice(-2) + '-' + Math.floor(Math.random()*9000+1000);
+  return `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>${title} — Spaceó Interiors LLC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:14px}
+body{font-family:'Inter','Segoe UI',Arial,sans-serif;color:#1a1a1a;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{max-width:794px;margin:0 auto;padding-bottom:80px}
+.accent-bar{height:6px;background:linear-gradient(90deg,#C0201A 0%,#8B0000 100%)}
+.letterhead{display:flex;justify-content:space-between;align-items:flex-start;padding:32px 48px 24px;border-bottom:1px solid #e5e5e5}
+.lh-logo{font-size:26px;font-weight:900;letter-spacing:-0.5px;color:#111;line-height:1;margin-bottom:4px}
+.lh-logo .red{color:#C0201A}
+.lh-tagline{font-size:10px;font-weight:500;letter-spacing:0.18em;color:#999;text-transform:uppercase}
+.lh-right{text-align:right}
+.lh-doc-title{font-size:12px;font-weight:700;color:#111;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em}
+.lh-meta{font-size:11px;color:#888;line-height:1.7}
+.lh-docid{font-size:10px;color:#bbb;margin-top:6px;font-family:monospace}
+.title-band{background:#111;color:#fff;padding:20px 48px}
+.title-band h1{font-size:20px;font-weight:800;letter-spacing:-0.3px;margin-bottom:3px}
+.title-band .sub{font-size:12px;color:#aaa;font-weight:400}
+.body-wrap{padding:36px 48px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px}
+.sum-card{border:1px solid #e8e8e8;border-radius:8px;padding:14px 16px;background:#fafafa}
+.sum-card.accent{border-left:3px solid #C0201A}
+.sum-label{font-size:10px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.sum-value{font-size:22px;font-weight:800;color:#111;line-height:1}
+.sum-value.green{color:#1A7A52}
+.sum-value.red{color:#C0201A}
+.sum-sub{font-size:10px;color:#aaa;margin-top:3px}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:28px}
+.section-header:first-child{margin-top:0}
+.section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#555;white-space:nowrap}
+.section-rule{flex:1;height:1px;background:#e5e5e5}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{background:#111;color:#fff;padding:9px 12px;text-align:left;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase}
+tbody td{padding:9px 12px;border-bottom:1px solid #f0f0f0;vertical-align:middle;color:#333}
+tbody tr:nth-child(even) td{background:#fafafa}
+tbody tr:last-child td{border-bottom:none}
+tfoot td{background:#1a1a1a;color:#fff;padding:10px 12px;font-weight:700;font-size:12px}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase}
+.badge-green{background:#D1FAE5;color:#065F46}
+.badge-amber{background:#FEF3C7;color:#92400E}
+.badge-red{background:#FEE2E2;color:#991B1B}
+.prose{font-size:13px;line-height:1.85;color:#333;white-space:pre-wrap}
+.prose strong{color:#111;font-weight:700}
+.doc-footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e5e5;padding:10px 48px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#bbb}
+.doc-footer .conf{color:#C0201A;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;font-size:9px}
+@media print{body{padding:0}.page{max-width:100%}.doc-footer{position:fixed;bottom:0}@page{margin:0;size:A4}}
+</style></head><body>
+<div class="page">
+  <div class="accent-bar"></div>
+  <div class="letterhead">
+    <div class="lh-left">
+      <div class="lh-logo"><span class="red">S</span>PACEÓ INTERIORS LLC</div>
+      <div class="lh-tagline">Fit-Out &amp; Interiors · Dubai, UAE</div>
+    </div>
+    <div class="lh-right">
+      <div class="lh-doc-title">${title}</div>
+      <div class="lh-meta">Date: ${dateStr}<br>Time: ${timeStr}<br>${subtitle}</div>
+      <div class="lh-docid">${docId}</div>
+    </div>
+  </div>
+  <div class="title-band"><h1>${title}</h1><div class="sub">${subtitle}</div></div>
+  <div class="body-wrap">${bodyHTML}</div>
+</div>
+<div class="doc-footer">
+  <div>Spaceó Interiors LLC · Workforce Management Platform · ${dateStr}</div>
+  <div class="conf">Confidential</div>
+  <div>${docId}</div>
+</div>
+</body></html>`;
+}
+
+function exportPayrollPDF() {
+  const now = new Date();
+  const today = now.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay() + 1);
+  const weekLabel = weekStart.toLocaleDateString('en-GB', {day:'numeric', month:'long'}) + ' – ' + today;
+  const totalHours = workers.reduce((s,w) => s + (w.hours||0), 0);
+  const totalPay = (totalHours * 12).toFixed(0);
+  const present = workers.filter(w => w.status === 'In').length;
+  const late = workers.filter(w => w.status === 'Late').length;
+  const absent = workers.filter(w => w.status === 'Absent').length;
+  const summaryGrid = `
+  <div class="summary-grid">
+    <div class="sum-card accent"><div class="sum-label">Total Workers</div><div class="sum-value">${workers.length}</div><div class="sum-sub">on payroll</div></div>
+    <div class="sum-card"><div class="sum-label">Present</div><div class="sum-value green">${present}</div><div class="sum-sub">on site today</div></div>
+    <div class="sum-card"><div class="sum-label">Total Hours</div><div class="sum-value">${totalHours.toFixed(1)}</div><div class="sum-sub">logged today</div></div>
+    <div class="sum-card"><div class="sum-label">Est. Payroll</div><div class="sum-value">AED ${Number(totalPay).toLocaleString()}</div><div class="sum-sub">today's total</div></div>
+  </div>`;
+  const rows = workers.map(w => {
+    const statusBadge = w.status === 'In' ? '<span class="badge badge-green">On Site</span>' : w.status === 'Late' ? '<span class="badge badge-amber">Late</span>' : '<span class="badge badge-red">Absent</span>';
+    return `<tr>
+      <td style="font-weight:600;color:#111;">${w.name}</td>
+      <td style="color:#666;">${w.role}</td>
+      <td style="color:#666;">${w.site.split('—')[0].trim()}</td>
+      <td>${statusBadge}</td>
+      <td>${w.in || '—'}</td>
+      <td style="font-weight:600;">${w.hours ? w.hours.toFixed(1) : '0.0'}h</td>
+      <td style="font-weight:700;color:#111;">${w.hours ? 'AED ' + (w.hours * 12).toFixed(0) : '—'}</td>
+    </tr>`;
+  }).join('');
+  const bodyHTML = `${summaryGrid}
+    <div class="section-header"><div class="section-title">Worker Breakdown</div><div class="section-rule"></div></div>
+    <table>
+      <thead><tr><th>Name</th><th>Role</th><th>Site</th><th>Status</th><th>Punch In</th><th>Hours</th><th>Est. Pay</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><td colspan="5">TOTAL — ${workers.length} workers</td><td>${totalHours.toFixed(1)}h</td><td>AED ${Number(totalPay).toLocaleString()}</td></tr></tfoot>
+    </table>
+    <p style="font-size:10px;color:#bbb;margin-top:16px;">* Rate: AED 12/hr placeholder — update per worker contract before use.</p>`;
+  openPDFWindow(getPDFShell('Payroll Report', 'Week of ' + weekLabel, bodyHTML));
+}
+
+function saveAIReportAsPDF(text) {
+  const formatted = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^• (.+)$/gm,'<div style="display:flex;gap:8px;padding:2px 0;"><span style="color:#C0201A;font-weight:700;">•</span><span>$1</span></div>')
+    .replace(/\n/g,'<br>');
+  const bodyHTML = `
+    <div class="section-header"><div class="section-title">AI-Generated Report</div><div class="section-rule"></div></div>
+    <div class="prose">${formatted}</div>`;
+  openPDFWindow(getPDFShell('Workforce Report', 'Generated by Spaceó AI Assistant', bodyHTML));
+}
+
+function exportCSV() {
+  const today = new Date().toLocaleDateString('en-GB').replace(/\//g,'-');
+  const headers = ['Name','Role','Site','Status','Punch In','Hours Logged'];
+  const rows = workers.map(w => [
+    w.name, w.role, w.site, w.status, w.in || '—', w.hours ? w.hours.toFixed(1) : '0'
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `spaceo-attendance-${today}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Attendance exported as CSV');
+}
+
+// ─── LATE ALERTS (browser notifications) ───
+function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function sendLateAlert(workerName, siteName) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('Spaceó — Late Arrival', {
+      body: workerName + ' arrived late at ' + siteName,
+      icon: '',
+    });
+  }
+}
+
+// Check for late workers every 60s and notify
+function startAlertMonitor() {
+  setInterval(() => {
+    workers.filter(w => w.status === 'Late').forEach(w => {
+      sendLateAlert(w.name, w.site.split('—')[0].trim());
+    });
+  }, 60000);
+}
+
+// ─── PWA INSTALL PROMPT ───
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('pwa-install-bar').style.display = 'flex';
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const bar = document.getElementById('pwa-install-bar');
+  if (bar) {
+    document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') { bar.style.display = 'none'; toast('App installed on your device'); }
+        deferredPrompt = null;
+      } else {
+        toast('Open in browser → Share → Add to Home Screen');
+      }
+    });
+    document.getElementById('pwa-dismiss-btn').addEventListener('click', () => { bar.style.display = 'none'; });
+  }
+  requestNotificationPermission();
+  startAlertMonitor();
+});
+
+// ─── REGISTER SERVICE WORKER ───
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swCode = `
+const CACHE = 'spaceo-v1';
+self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', './index.html']))));
+self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+    `;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+  });
+}
+
+// ─── TOAST ───
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ─── DATE ───
+const _dateLine = document.getElementById('dash-date-line');
+if (_dateLine) _dateLine.textContent =
+  new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+</script>
+
+<!-- ═══ SPACEÓ AI ASSISTANT ═══ -->
+<div id="ai-fab">
+  <div class="ai-fab-dot"></div>
+  <button class="ai-fab-btn" onclick="toggleAI()" aria-label="Open Spaceó Assistant">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z"/>
+      <path d="M8 12h.01M12 12h.01M16 12h.01"/>
+    </svg>
+  </button>
+</div>
+
+<div id="ai-panel">
+  <div class="ai-panel-header">
+    <div class="ai-panel-avatar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+      </svg>
+    </div>
+    <div>
+      <div class="ai-panel-title">Spaceó Assistant</div>
+      <div class="ai-panel-sub">Ask, act, or get guidance on anything</div>
+    </div>
+    <button class="ai-close-btn" onclick="toggleAI()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="ai-messages" id="ai-messages"></div>
+  <div class="ai-suggestions" id="ai-chips">
+    <button class="ai-chip" onclick="askChip(this)">How do I add a worker?</button>
+    <button class="ai-chip" onclick="askChip(this)">Who is absent today?</button>
+    <button class="ai-chip" onclick="askChip(this)">How do I set up geofencing?</button>
+    <button class="ai-chip" onclick="askChip(this)">Show me the reports tab</button>
+    <button class="ai-chip" onclick="askChip(this)">Total payroll estimate today</button>
+    <button class="ai-chip" onclick="askChip(this)">How do I reassign workers?</button>
+  </div>
+  <div class="ai-input-row">
+    <textarea class="ai-input" id="ai-input" placeholder="Ask about your workforce…" rows="1" onkeydown="aiKeydown(event)" oninput="autoResize(this)"></textarea>
+    <button class="ai-send-btn" id="ai-send" onclick="sendAI()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// ─── AI ASSISTANT ───
+let aiOpen = false;
+let aiHistory = [];
+let aiLoading = false;
+
+function buildContext() {
+  const today = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const nl = '\n';
+
+  const allWorkerProfiles = workers.map(w => {
+    const hoursStr = w.hours ? w.hours.toFixed(1) + 'h logged today' : '0h logged';
+    const punchStr = w.in ? 'Punched in at ' + w.in : 'Not punched in';
+    const estPay   = w.hours ? 'AED ' + (w.hours * 12).toFixed(0) : 'AED 0';
+    return `• ${w.name} | ${w.role} | Site: ${w.site} | Status: ${w.status} | ${punchStr} | ${hoursStr} | ${estPay} | PIN: ${w.pin}`;
+  }).join(nl);
+
+  const siteProfiles = SITES.map(s => {
+    const sw      = workers.filter(w => w.site === s.name);
+    const onsite  = sw.filter(w => w.status === 'In' || w.status === 'Late').length;
+    const absent  = sw.filter(w => w.status === 'Absent').length;
+    const late    = sw.filter(w => w.status === 'Late').length;
+    const totalHrs = sw.reduce((sum,w) => sum + (w.hours||0), 0);
+    const gps     = (s.lat && s.lng) ? `GPS: ${Number(s.lat).toFixed(4)},${Number(s.lng).toFixed(4)} r=${s.radius}m` : 'No GPS set';
+    return `• ${s.name} | Area: ${s.loc||'—'} | Cap: ${s.capacity||'—'} | ${gps} | On site: ${onsite} | Absent: ${absent} | Late: ${late} | Total hrs: ${totalHrs.toFixed(1)}h`;
+  }).join(nl);
+
+  const totals = {
+    total:      workers.length,
+    present:    workers.filter(w => w.status === 'In').length,
+    late:       workers.filter(w => w.status === 'Late').length,
+    absent:     workers.filter(w => w.status === 'Absent').length,
+    totalHours: workers.reduce((s,w) => s + (w.hours||0), 0)
+  };
+
+  const siteNames = SITES.map(s => s.name).join(' | ') || 'None';
+  const roles = 'Gypsum Installer, Joinery Worker, Painter, Tiler, Electrician, AC Technician, Plumber, Site Supervisor, Wallpaper Installer, Flooring Specialist';
+
+  return [
+    'You are the Spaceó Assistant — a fully operational AI manager embedded in the Spaceó Interiors LLC workforce platform in Dubai.',
+    'Today is ' + today + '.',
+    '',
+    '══ LIVE PLATFORM DATA ══',
+    `Workers: ${totals.total} total | ${totals.present} on site | ${totals.late} late | ${totals.absent} absent | ${totals.totalHours.toFixed(1)}h total today | Est. payroll AED ${(totals.totalHours*12).toFixed(0)}`,
+    '',
+    'WORKER PROFILES:',
+    allWorkerProfiles || 'No workers in system.',
+    '',
+    'SITE PROFILES:',
+    siteProfiles || 'No sites in system.',
+    `Available sites: ${siteNames}`,
+    `Available roles: ${roles}`,
+    '',
+    '══ YOUR FULL CAPABILITIES ══',
+    '',
+    '1. WORKFORCE INTELLIGENCE',
+    '   - Look up any worker by name — give full profile, hours, status, pay',
+    '   - List absent/late/present workers',
+    '   - Compare sites, identify underperforming sites',
+    '   - Calculate payroll estimates for any selection',
+    '   - Generate PDF reports (say "generate report" or "save as PDF")',
+    '',
+    '2. EXECUTE ACTIONS — you can perform real system actions by including a JSON block in your response',
+    '   When the user asks you to DO something (add, move, remove, update), respond with your explanation AND an ACTION block.',
+    '   ACTION BLOCK FORMAT (include literally in your response):',
+    '   |||ACTION|||{"type":"ACTION_TYPE","data":{...}}|||END|||',
+    '',
+    '   Available action types and their data fields:',
+    '',
+    '   ADD_WORKER — add a new worker',
+    '   Data: { "name":"Full Name", "role":"Role", "site":"Exact Site Name", "pin":"1234" }',
+    '   Example: user says "add Ahmed Al Farsi as a Painter at [site] with PIN 5678"',
+    '',
+    '   REASSIGN_WORKER — move one worker to a different site',
+    '   Data: { "name":"Worker Name", "newSite":"Exact Site Name" }',
+    '   Example: user says "move Ravi Kumar to [site]"',
+    '',
+    '   BULK_REASSIGN — move multiple workers to a site',
+    '   Data: { "names":["Name1","Name2"], "newSite":"Exact Site Name" }',
+    '   Example: user says "move all workers from Jumeirah to Business Bay"',
+    '',
+    '   REMOVE_WORKER — remove a worker',
+    '   Data: { "name":"Worker Name" }',
+    '',
+    '   NAVIGATE — open a specific section of the dashboard',
+    '   Data: { "tab":"overview"|"workers"|"sites"|"reports" }',
+    '   Example: user says "show me the workers tab" or "go to reports"',
+    '',
+    '   HIGHLIGHT_WORKER — scroll to and highlight a worker row in the table',
+    '   Data: { "name":"Worker Name" }',
+    '',
+    '   OPEN_ADD_WORKER — open the Add Worker form',
+    '   Data: {}',
+    '',
+    '   OPEN_ADD_SITE — open the Add Site form',
+    '   Data: {}',
+    '',
+    '3. GUIDANCE & INSTRUCTIONS',
+    '   When users ask "how do I..." or "where do I...", give clear step-by-step instructions.',
+    '   Always reference the actual UI elements: tab names, button labels, modal fields.',
+    '   If it makes sense, also trigger a NAVIGATE action to take them directly there.',
+    '',
+    '   Key UI reference:',
+    '   - Owner dashboard sidebar: Dashboard | All Workers | Projects | Reports | Add Worker | Sign Out',
+    '   - Add Worker: sidebar → Add Worker → fill First name, Last name, Role, Site, PIN → Add Worker button',
+    '   - Add Site: Projects tab → Add Site button → fill Name, Location, Capacity, GPS coords → Add Site button',
+    '   - Geofence: Projects tab → Edit on a site → GPS section → enter lat/lng or use Detect button → Save',
+    '   - Site Engineer geofence: Engineer dashboard → Geofence tab → enter coords or Detect → Save Geofence',
+    '   - Bulk reassign: All Workers tab → tick checkboxes → Reassign Site button → pick destination → Confirm',
+    '   - Edit worker: All Workers tab → Edit button on worker row',
+    '   - Reports & export: Reports tab → Export CSV or Payroll PDF buttons',
+    '   - AI report PDF: ask for a report → Save as PDF button appears on the response',
+    '   - Worker login: Landing → I\'m a Worker → select site → name → PIN → Face Verification → Punch In',
+    '   - Site Engineer login: Landing → Site Engineer → engineer@spaceo.ae / eng123 (demo)',
+    '',
+    '4. ALWAYS:',
+    '   - Be concise and direct. Use bullet points for lists.',
+    '   - If a worker name is ambiguous, list close matches and ask to confirm.',
+    '   - If asked to do something that needs a site name, confirm the exact site from the available list.',
+    '   - For destructive actions (remove), always say what you\'re about to do and confirm you did it.',
+    '   - Never make up worker or site data — only use what is in the profiles above.',
+    '   - Format action blocks exactly as shown — the app parses them literally.',
+  ].join(nl);
+}
+
+// ─── ACTION EXECUTOR ───
+function executeAIAction(actionStr) {
+  let action;
+  try { action = JSON.parse(actionStr); } catch(e) { return null; }
+  const { type, data } = action;
+
+  switch(type) {
+
+    case 'ADD_WORKER': {
+      if (!data.name || !data.role || !data.site || !data.pin) return 'Missing fields for add worker.';
+      const site = SITES.find(s => s.name === data.site || s.name.toLowerCase().includes(data.site.toLowerCase()));
+      if (!site) return `Site "${data.site}" not found.`;
+      workers.push({ name: data.name, role: data.role, site: site.name, in: '', hours: 0, status: 'Absent', pin: data.pin, photo: null });
+      saveWorkers(); refreshSiteDropdowns(); updateDashStats();
+      if (document.getElementById('tab-workers').style.display !== 'none') renderWorkersTable(workerTableFilter);
+      return `✓ **${data.name}** added as ${data.role} at ${site.name.split('—')[0].trim()}.`;
+    }
+
+    case 'REASSIGN_WORKER': {
+      const wi = workers.findIndex(w => w.name.toLowerCase() === data.name.toLowerCase() || w.name.toLowerCase().includes(data.name.toLowerCase()));
+      if (wi < 0) return `Worker "${data.name}" not found.`;
+      const site = SITES.find(s => s.name === data.newSite || s.name.toLowerCase().includes(data.newSite.toLowerCase()));
+      if (!site) return `Site "${data.newSite}" not found.`;
+      const oldSite = workers[wi].site.split('—')[0].trim();
+      workers[wi].site = site.name;
+      saveWorkers(); updateDashStats();
+      if (document.getElementById('tab-workers').style.display !== 'none') renderWorkersTable(workerTableFilter);
+      return `✓ **${workers[wi].name}** moved from ${oldSite} to ${site.name.split('—')[0].trim()}.`;
+    }
+
+    case 'BULK_REASSIGN': {
+      const site = SITES.find(s => s.name === data.newSite || s.name.toLowerCase().includes(data.newSite.toLowerCase()));
+      if (!site) return `Site "${data.newSite}" not found.`;
+      let moved = [];
+      data.names.forEach(name => {
+        const wi = workers.findIndex(w => w.name.toLowerCase().includes(name.toLowerCase()));
+        if (wi >= 0) { workers[wi].site = site.name; moved.push(workers[wi].name); }
+      });
+      saveWorkers(); updateDashStats(); refreshSiteDropdowns();
+      if (document.getElementById('tab-workers').style.display !== 'none') renderWorkersTable(workerTableFilter);
+      return `✓ Moved ${moved.length} worker${moved.length!==1?'s':''} to ${site.name.split('—')[0].trim()}: ${moved.join(', ')}.`;
+    }
+
+    case 'REMOVE_WORKER': {
+      const wi = workers.findIndex(w => w.name.toLowerCase().includes(data.name.toLowerCase()));
+      if (wi < 0) return `Worker "${data.name}" not found.`;
+      const name = workers[wi].name;
+      workers.splice(wi, 1);
+      saveWorkers(); updateDashStats(); refreshSiteDropdowns();
+      if (document.getElementById('tab-workers').style.display !== 'none') renderWorkersTable(workerTableFilter);
+      return `✓ **${name}** has been removed from the system.`;
+    }
+
+    case 'NAVIGATE': {
+      const tab = data.tab;
+      const btn = document.querySelector(`.sb-item[onclick*="'${tab}'"]`);
+      if (btn) { showDashTab(tab, btn); }
+      return null; // silent
+    }
+
+    case 'HIGHLIGHT_WORKER': {
+      // Navigate to workers tab first
+      const btn = document.querySelector(".sb-item[onclick*=\"'workers'\"]");
+      if (btn) showDashTab('workers', btn);
+      setTimeout(() => {
+        const wi = workers.findIndex(w => w.name.toLowerCase().includes(data.name.toLowerCase()));
+        if (wi < 0) return;
+        const row = document.getElementById('wrow-' + wi);
+        if (row) {
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          row.style.transition = 'background 0.3s';
+          row.style.background = '#FDE8E7';
+          setTimeout(() => { row.style.background = ''; }, 2500);
+        }
+      }, 400);
+      return null;
+    }
+
+    case 'OPEN_ADD_WORKER': {
+      showAddModal();
+      return null;
+    }
+
+    case 'OPEN_ADD_SITE': {
+      const btn = document.querySelector(".sb-item[onclick*=\"'sites'\"]");
+      if (btn) showDashTab('sites', btn);
+      setTimeout(() => showAddSiteModal(), 400);
+      return null;
+    }
+
+    default: return null;
+  }
+}
+
+function parseAndExecuteActions(text) {
+  const pattern = /\|\|\|ACTION\|\|\|([\s\S]*?)\|\|\|END\|\|\|/g;
+  const results = [];
+  let match;
+  while ((match = pattern.exec(text)) !== null) {
+    const result = executeAIAction(match[1].trim());
+    if (result) results.push(result);
+  }
+  // Strip action blocks from displayed text
+  const cleanText = text.replace(/\|\|\|ACTION\|\|\|[\s\S]*?\|\|\|END\|\|\|/g, '').trim();
+  return { cleanText, actionResults: results };
+}
+
+function toggleAI() {
+  aiOpen = !aiOpen;
+  const panel = document.getElementById('ai-panel');
+  if (aiOpen) {
+    panel.style.display = 'flex';
+    setTimeout(() => panel.classList.add('open'), 10);
+    if (aiHistory.length === 0) {
+      setTimeout(() => {
+        addTimestamp();
+        addAIMsg('assistant', `Good ${getTimeOfDay()}. I\'m your Spaceó Assistant.\n\nI can **read your data**, **execute actions**, and **guide you** through anything in the platform — just type naturally.\n\n_Try: "add a worker", "move Ravi to Business Bay", "who\'s absent?", or "how do I set up geofencing?"_`);
+      }, 300);
+    }
+    setTimeout(() => document.getElementById('ai-input').focus(), 350);
+  } else {
+    panel.classList.remove('open');
+    setTimeout(() => { panel.style.display = 'none'; }, 250);
+  }
+}
+
+function getTimeOfDay() {
+  const h = new Date().getHours();
+  return h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+}
+
+function addAIMsg(role, text) {
+  const container = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + role;
+
+  if (role === 'assistant') {
+    let html = text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^#{1,3} (.+)$/gm, '<div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--c-black);margin:10px 0 4px;">$1</div>')
+      .replace(/^(\d+)\. (.+)$/gm, '<div style="display:flex;gap:6px;margin:2px 0;"><span style="font-weight:700;color:var(--c-green);min-width:16px;">$1.</span><span>$2</span></div>')
+      .replace(/^• (.+)$/gm, '<div style="display:flex;gap:6px;margin:2px 0;"><span style="color:var(--c-green);font-weight:700;">•</span><span>$1</span></div>')
+      .replace(/\n/g, '<br>');
+    div.innerHTML = html;
+
+    // Add Save PDF button for substantial reports
+    if (text.length > 300 && (text.includes('Report') || text.includes('Activity') || text.includes('Summary') || text.toLowerCase().includes('hours') || text.toLowerCase().includes('payroll'))) {
+      const pdfBtn = document.createElement('button');
+      pdfBtn.innerHTML = '📄 Save as PDF';
+      pdfBtn.style.cssText = 'margin-top:10px;padding:7px 14px;background:var(--c-black);color:#fff;border:none;border-radius:8px;font-size:12px;font-family:var(--font-body);font-weight:600;cursor:pointer;display:block;';
+      pdfBtn.onclick = () => saveAIReportAsPDF(text);
+      div.appendChild(pdfBtn);
+    }
+  } else {
+    div.textContent = text;
+  }
+
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function addLoadingMsg() {
+  const container = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg loading';
+  div.innerHTML = '<div class="ai-typing"><span></span><span></span><span></span></div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+let lastFailedMessage = null;
+
+function addTimestamp() {
+  const container = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = 'ai-ts';
+  div.textContent = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
+  container.appendChild(div);
+}
+
+function addErrorCard(message, retryable) {
+  const container = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg error';
+  div.innerHTML = `<div class="ai-error-title">⚠ Something went wrong</div>
+    <div class="ai-error-body">${message}</div>
+    ${retryable ? `<button class="ai-retry-btn" onclick="retrySendAI()">↺ Retry</button>` : ''}`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function addOutOfScopeCard(msg) {
+  const container = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg outofscope';
+  div.innerHTML = `💡 ${msg}`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+async function retrySendAI() {
+  if (!lastFailedMessage) return;
+  // Remove last error card
+  const container = document.getElementById('ai-messages');
+  const msgs = container.querySelectorAll('.ai-msg.error');
+  msgs[msgs.length - 1]?.remove();
+  await sendAI(lastFailedMessage, true);
+}
+
+// Out-of-scope detection — topics clearly unrelated to workforce management
+const OUT_OF_SCOPE_PATTERNS = [
+  /\b(weather|forecast|temperature|rain|sunny)\b/i,
+  /\b(recipe|cook|food|restaurant|eat)\b/i,
+  /\b(movie|film|series|netflix|watch)\b/i,
+  /\b(stock|crypto|bitcoin|investment|trading)\b/i,
+  /\b(poem|story|essay|write me a)\b/i,
+  /\b(joke|funny|laugh)\b/i,
+  /\b(translate|language|spanish|french|arabic)\b/i,
+  /\b(news|politics|election|president)\b/i,
+  /\b(sport|football|cricket|game score)\b/i,
+];
+
+function isOutOfScope(text) {
+  return OUT_OF_SCOPE_PATTERNS.some(p => p.test(text));
+}
+
+async function sendAI(customText, isRetry = false) {
+  if (aiLoading) return;
+  const input = document.getElementById('ai-input');
+  const text  = customText || input.value.trim();
+  if (!text) return;
+
+  // Out-of-scope check
+  if (!isRetry && isOutOfScope(text)) {
+    document.getElementById('ai-chips').style.display = 'none';
+    addAIMsg('user', text);
+    addOutOfScopeCard("I'm focused on your Spaceó workforce. I can help with workers, sites, attendance, reports, or platform guidance — what would you like to know?");
+    input.value = ''; input.style.height = 'auto';
+    return;
+  }
+
+  document.getElementById('ai-chips').style.display = 'none';
+  if (!isRetry) {
+    input.value = ''; input.style.height = 'auto';
+    addAIMsg('user', text);
+    aiHistory.push({ role: 'user', content: text });
+    lastFailedMessage = text;
+  }
+
+  aiLoading = true;
+  document.getElementById('ai-send').disabled = true;
+  const loader = addLoadingMsg();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        system: buildContext(),
+        messages: aiHistory
+      })
+    });
+
+    loader.remove();
+
+    // Handle HTTP errors
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      const code = res.status;
+      let msg = 'The AI service returned an error.';
+      if (code === 401) msg = 'API authentication failed. Please check your API key in settings.';
+      else if (code === 429) msg = 'Too many requests. Please wait a moment and try again.';
+      else if (code === 500) msg = 'The AI service is temporarily unavailable. Please retry in a few seconds.';
+      else if (code === 529) msg = 'The AI service is overloaded. Please retry shortly.';
+      addErrorCard(msg, true);
+      aiLoading = false;
+      document.getElementById('ai-send').disabled = false;
+      return;
+    }
+
+    const data = await res.json();
+    const rawReply = data.content?.[0]?.text;
+
+    if (!rawReply) {
+      addErrorCard('Received an empty response. Please try again.', true);
+      aiLoading = false;
+      document.getElementById('ai-send').disabled = false;
+      return;
+    }
+
+    // Parse and execute any embedded actions
+    const { cleanText, actionResults } = parseAndExecuteActions(rawReply);
+
+    // Add timestamp before assistant reply
+    addTimestamp();
+
+    if (cleanText) addAIMsg('assistant', cleanText);
+
+    if (actionResults.length > 0) {
+      setTimeout(() => addAIMsg('assistant', actionResults.join('\n')), 350);
+    }
+
+    aiHistory.push({ role: 'assistant', content: rawReply });
+    lastFailedMessage = null; // clear on success
+
+  } catch (err) {
+    loader.remove();
+    const isOffline = !navigator.onLine;
+    addErrorCard(
+      isOffline
+        ? 'No internet connection. Please check your network and retry.'
+        : 'Could not reach the AI service. Please check your connection.',
+      true
+    );
+  }
+
+  aiLoading = false;
+  document.getElementById('ai-send').disabled = false;
+}
+
+function askChip(btn) { sendAI(btn.textContent); }
+
+function aiKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAI(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// Show FAB only when owner dashboard is active
+const origGoTo = goTo;
+window.goTo = function(id) {
+  origGoTo(id);
+  document.getElementById('ai-fab').style.display = id === 'owner-dash' ? 'block' : 'none';
+  if (id !== 'owner-dash' && aiOpen) toggleAI();
+};
+
+// Also show on initial owner login
+const origOwnerLogin = ownerLogin;
+window.ownerLogin = function() {
+  origOwnerLogin();
+  setTimeout(() => {
+    document.getElementById('ai-fab').style.display = 'block';
+  }, 700);
+};
+</script>
+
+
+
+</body>
+</html>
