@@ -1165,10 +1165,14 @@ tbody tr:hover td { background: var(--c-gray-50); }
     <div class="ol-logo"><span>S</span>PACEÓ</div><div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:4px;">INTERIORS LLC</div>
     <div class="ol-sub">Owner & Manager Portal</div>
     <label class="ol-label">Email</label>
-    <input class="ol-input" type="email" placeholder="owner@company.com" id="owner-email" value="owner@company.com">
+    <input class="ol-input" type="email" placeholder="owner@spaceo.ae" id="owner-email">
     <label class="ol-label">Password</label>
-    <input class="ol-input" type="password" placeholder="••••••••" id="owner-pass" value="password">
-    <button class="btn-primary" onclick="ownerLogin()">Sign in →</button>
+    <input class="ol-input" type="password" placeholder="••••••••" id="owner-pass">
+    <div id="owner-login-error" style="color:var(--c-red);font-size:12px;margin-bottom:8px;display:none;"></div>
+    <button class="btn-primary" id="owner-login-btn" onclick="ownerLogin()">Sign in →</button>
+    <div style="text-align:center;margin-top:12px;">
+      <span style="font-size:12px;color:var(--c-gray-400);cursor:pointer;" onclick="goTo('forgot-password')">Forgot password?</span>
+    </div>
     <div class="ol-hint">← <span style="cursor:pointer;color:var(--c-green);" onclick="goTo('landing')">Back to home</span></div>
   </div>
 </div>
@@ -1482,7 +1486,12 @@ tbody tr:hover td { background: var(--c-gray-50); }
     <div class="sb-item" onclick="showAddModal()">
       <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span> Add Worker
     </div>
-
+    <div class="sb-item" onclick="showDashTab('team', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Team / Engineers
+    </div>
+    <div class="sb-item" onclick="showDashTab('settings', this)">
+      <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Settings
+    </div>
     <div class="sb-item" onclick="goTo('landing')">
       <span class="sb-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span> Sign Out
     </div>
@@ -1490,8 +1499,8 @@ tbody tr:hover td { background: var(--c-gray-50); }
       <div class="sb-user">
         <div class="sb-avatar">OW</div>
         <div>
-          <div class="sb-user-name">Spaceó Admin</div>
-          <div class="sb-user-role">Project Manager</div>
+          <div class="sb-user-name" id="owner-display-name">Spaceó Admin</div>
+          <div class="sb-user-role" id="owner-display-role">Owner</div>
         </div>
       </div>
     </div>
@@ -1649,6 +1658,39 @@ tbody tr:hover td { background: var(--c-gray-50); }
         <div id="top-workers-list"></div>
       </div>
     </div>
+
+    <!-- TEAM TAB -->
+    <div id="tab-team" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;">
+        <div><div class="dash-title">Team & Engineers</div><div class="dash-sub">Manage site engineer accounts and their site assignments</div></div>
+        <button class="btn-primary" style="width:auto;padding:12px 20px;font-size:14px;" onclick="showAddEngineerModal()">+ Add Engineer</button>
+      </div>
+      <div id="engineers-list"></div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" style="display:none;">
+      <div class="dash-title" style="margin-bottom:4px;">Account Settings</div>
+      <div class="dash-sub" style="margin-bottom:28px;">Update your login credentials</div>
+      <div class="panel" style="max-width:480px;margin-bottom:20px;">
+        <div class="panel-title">Owner Details</div>
+        <label class="modal-label">Display Name</label>
+        <input class="modal-input" id="settings-name" type="text" placeholder="Your name">
+        <label class="modal-label">Email</label>
+        <input class="modal-input" id="settings-email" type="email" placeholder="owner@spaceo.ae">
+        <label class="modal-label">New Password <span style="font-size:11px;color:var(--c-gray-400);">(leave blank to keep current)</span></label>
+        <input class="modal-input" id="settings-pass" type="password" placeholder="New password">
+        <label class="modal-label">Confirm New Password</label>
+        <input class="modal-input" id="settings-pass2" type="password" placeholder="Confirm password">
+        <button onclick="saveOwnerSettings()" style="padding:12px 24px;background:var(--c-black);color:#fff;border:none;border-radius:var(--radius-sm);font-family:var(--font-head);font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;">Save Changes →</button>
+      </div>
+      <div class="panel" style="max-width:480px;background:#FEF2F2;border:1px solid #FECACA;">
+        <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--c-red);margin-bottom:6px;">⚠ Danger Zone</div>
+        <div style="font-size:12px;color:#B91C1C;line-height:1.6;margin-bottom:12px;">Signing out will end your session. All data is saved to Supabase.</div>
+        <button onclick="goTo('landing')" style="padding:10px 20px;background:var(--c-red);color:#fff;border:none;border-radius:8px;font-family:var(--font-head);font-size:13px;font-weight:700;cursor:pointer;">Sign Out</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- Mobile nav -->
@@ -1756,6 +1798,61 @@ tbody tr:hover td { background: var(--c-gray-50); }
   </div>
 </div>
 
+<!-- ═══ FIRST TIME SETUP ═══ -->
+<div id="first-setup" class="view">
+  <div class="ol-card" style="max-width:420px;">
+    <div class="ol-logo"><span>S</span>PACEÓ</div>
+    <div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:8px;">INTERIORS LLC</div>
+    <div style="font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:4px;">Welcome — First Time Setup</div>
+    <div style="font-size:12px;color:var(--c-gray-400);margin-bottom:20px;">Create your owner account to get started.</div>
+    <label class="ol-label">Your Name</label>
+    <input class="ol-input" type="text" placeholder="e.g. Mohammed Al Rashidi" id="setup-name">
+    <label class="ol-label">Email</label>
+    <input class="ol-input" type="email" placeholder="owner@spaceo.ae" id="setup-email">
+    <label class="ol-label">Password</label>
+    <input class="ol-input" type="password" placeholder="Choose a strong password" id="setup-pass">
+    <label class="ol-label">Confirm Password</label>
+    <input class="ol-input" type="password" placeholder="Repeat password" id="setup-pass2">
+    <button class="btn-primary" onclick="createOwnerAccount()">Create Account →</button>
+    <div id="setup-error" style="color:var(--c-red);font-size:12px;margin-top:8px;display:none;"></div>
+  </div>
+</div>
+
+<!-- ═══ FORGOT PASSWORD ═══ -->
+<div id="forgot-password" class="view">
+  <div class="ol-card">
+    <div class="ol-logo"><span>S</span>PACEÓ</div>
+    <div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:16px;">INTERIORS LLC</div>
+    <div style="font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:4px;">Reset Password</div>
+    <div style="font-size:12px;color:var(--c-gray-400);margin-bottom:20px;">Enter your email and we'll send a reset link.</div>
+    <label class="ol-label">Email</label>
+    <input class="ol-input" type="email" placeholder="owner@spaceo.ae" id="forgot-email">
+    <button class="btn-primary" onclick="sendPasswordReset()">Send Reset Link →</button>
+    <div id="forgot-msg" style="font-size:12px;margin-top:10px;display:none;"></div>
+    <div class="ol-hint">← <span style="cursor:pointer;color:var(--c-green);" onclick="goTo('owner-login')">Back to login</span></div>
+  </div>
+</div>
+
+<!-- ADD ENGINEER MODAL -->
+<div id="add-engineer-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
+  <div class="modal-card" style="max-width:480px;max-height:90vh;overflow-y:auto;">
+    <div class="modal-title" id="eng-modal-title">Add Site Engineer</div>
+    <label class="modal-label">Full Name</label>
+    <input class="modal-input" id="ae-name" type="text" placeholder="e.g. Khalid Al Mansoor">
+    <label class="modal-label">Email (login ID)</label>
+    <input class="modal-input" id="ae-email" type="email" placeholder="engineer@spaceo.ae">
+    <label class="modal-label">Password</label>
+    <input class="modal-input" id="ae-pass" type="password" placeholder="Set their login password">
+    <label class="modal-label">Assigned Sites <span style="font-size:11px;color:var(--c-gray-400);">(select one or more)</span></label>
+    <div id="ae-sites-list" style="background:var(--c-gray-50);border:1.5px solid var(--c-gray-200);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;max-height:160px;overflow-y:auto;"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeAddEngineerModal()">Cancel</button>
+      <button class="btn-add" id="ae-save-btn" onclick="saveEngineer()">Add Engineer →</button>
+    </div>
+    <div id="ae-error" style="color:var(--c-red);font-size:12px;margin-top:8px;display:none;"></div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast"></div>
 
@@ -1804,6 +1901,187 @@ tbody tr:hover td { background: var(--c-gray-50); }
   </div>
 </div>
 
+<!-- SUPABASE CLIENT -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const SUPABASE_URL = 'https://dnoqoofzgnfnubyfphhi.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRub3Fvb2Z6Z25mbnVieWZwaGhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyMjQ3ODgsImV4cCI6MjA5NTgwMDc4OH0.DnBUSnO1oJhKpVnspB4dbBXc2gSKbNQwkXQO1RzY27s';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── SUPABASE DATA LAYER ───
+
+async function dbLoadSites() {
+  try {
+    const { data, error } = await sb.from('sites').select('*').order('created_at');
+    if (error) throw error;
+    SITES = data.map(s => ({
+      name: s.name, loc: s.loc, capacity: s.capacity,
+      lat: s.lat, lng: s.lng, radius: s.radius || 300,
+      archived: s.archived || false, archivedAt: s.archived_at,
+      _id: s.id
+    }));
+    localStorage.setItem('spaceo_sites', JSON.stringify(SITES));
+    return true;
+  } catch(e) {
+    console.warn('Supabase sites load failed, using cache:', e.message);
+    const saved = localStorage.getItem('spaceo_sites');
+    if (saved) SITES = JSON.parse(saved);
+    return false;
+  }
+}
+
+async function dbSaveSite(site) {
+  const row = {
+    name: site.name, loc: site.loc || null, capacity: site.capacity || null,
+    lat: site.lat || null, lng: site.lng || null, radius: site.radius || 300,
+    archived: site.archived || false, archived_at: site.archivedAt || null
+  };
+  if (site._id) {
+    const { error } = await sb.from('sites').update(row).eq('id', site._id);
+    if (error) throw error;
+  } else {
+    const { data, error } = await sb.from('sites').insert(row).select().single();
+    if (error) throw error;
+    site._id = data.id;
+  }
+}
+
+async function dbDeleteSite(site) {
+  if (site._id) { const { error } = await sb.from('sites').delete().eq('id', site._id); if (error) throw error; }
+}
+
+async function dbLoadWorkers() {
+  try {
+    const { data, error } = await sb.from('workers').select('*').order('created_at');
+    if (error) throw error;
+    // Get site names map
+    const siteMap = {};
+    SITES.forEach(s => { if (s._id) siteMap[s._id] = s.name; });
+    workers = data.map(w => ({
+      name: w.name, role: w.role,
+      site: siteMap[w.site_id] || '',
+      pin: w.pin, photo: w.photo,
+      status: w.status || 'Absent',
+      in: w.time_in || '', hours: w.hours || 0,
+      note: w.note ? (typeof w.note === 'string' ? JSON.parse(w.note) : w.note) : null,
+      _id: w.id, _siteId: w.site_id
+    }));
+    localStorage.setItem('spaceo_workers', JSON.stringify(workers));
+    return true;
+  } catch(e) {
+    console.warn('Supabase workers load failed, using cache:', e.message);
+    const saved = localStorage.getItem('spaceo_workers');
+    if (saved) workers = JSON.parse(saved);
+    return false;
+  }
+}
+
+async function dbSaveWorker(w) {
+  const site = SITES.find(s => s.name === w.site);
+  const row = {
+    name: w.name, role: w.role, site_id: site ? site._id : null,
+    pin: w.pin, photo: w.photo || null, status: w.status || 'Absent',
+    time_in: w.in || null, hours: w.hours || 0,
+    note: w.note ? JSON.stringify(w.note) : null
+  };
+  if (w._id) {
+    const { error } = await sb.from('workers').update(row).eq('id', w._id);
+    if (error) throw error;
+  } else {
+    const { data, error } = await sb.from('workers').insert(row).select().single();
+    if (error) throw error;
+    w._id = data.id;
+  }
+}
+
+async function dbDeleteWorker(w) {
+  if (w._id) { const { error } = await sb.from('workers').delete().eq('id', w._id); if (error) throw error; }
+}
+
+async function dbLoadEngineers() {
+  try {
+    const { data, error } = await sb.from('engineers').select('*').order('created_at');
+    if (error) throw error;
+    const siteIdxMap = {};
+    SITES.forEach((s, i) => { if (s._id) siteIdxMap[s._id] = i; });
+    engineers = data.map(e => ({
+      id: e.email, pass: e.pass, name: e.name,
+      siteIndices: (e.site_ids || []).map(sid => siteIdxMap[sid]).filter(i => i !== undefined),
+      _id: e.id
+    }));
+    if (engineers.length === 0) {
+      await sb.from('engineers').insert({ email: 'engineer@spaceo.ae', pass: 'eng123', name: 'Site Engineer', site_ids: [] });
+      engineers = [{ id: 'engineer@spaceo.ae', pass: 'eng123', name: 'Site Engineer', siteIndices: [] }];
+    }
+    localStorage.setItem('spaceo_engineers', JSON.stringify(engineers));
+    return true;
+  } catch(e) {
+    console.warn('Supabase engineers load failed, using cache:', e.message);
+    const saved = localStorage.getItem('spaceo_engineers');
+    if (saved) engineers = JSON.parse(saved);
+    else engineers = [{ id: 'engineer@spaceo.ae', pass: 'eng123', name: 'Site Engineer', siteIndices: [] }];
+    return false;
+  }
+}
+
+async function dbLogCheckin(worker, type) {
+  try {
+    const site = SITES.find(s => s.name === worker.site);
+    const today = new Date().toISOString().split('T')[0];
+    if (type === 'in') {
+      await sb.from('checkins').insert({
+        worker_id: worker._id, site_id: site ? site._id : null,
+        time_in: new Date().toISOString(), date: today
+      });
+    } else {
+      const { data } = await sb.from('checkins').select('id')
+        .eq('worker_id', worker._id).eq('date', today).is('time_out', null)
+        .order('time_in', { ascending: false }).limit(1);
+      if (data && data.length > 0) {
+        await sb.from('checkins').update({
+          time_out: new Date().toISOString(), hours: worker.hours || 0
+        }).eq('id', data[0].id);
+      }
+    }
+  } catch(e) { console.warn('Checkin log error:', e.message); }
+}
+
+// ─── LOADING OVERLAY ───
+function showDBLoading(msg) {
+  let el = document.getElementById('db-loading');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'db-loading';
+    el.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;';
+    el.innerHTML = `<div style="font-family:var(--font-head);font-size:24px;font-weight:900;color:#fff;"><span style="color:#C0201A;">S</span>PACEÓ</div>
+      <div style="width:36px;height:36px;border:3px solid #333;border-top-color:#C0201A;border-radius:50%;animation:dbspin 0.7s linear infinite;"></div>
+      <div id="db-loading-msg" style="color:#aaa;font-family:var(--font-body);font-size:13px;">${msg||'Connecting…'}</div>
+      <style>@keyframes dbspin{to{transform:rotate(360deg)}}</style>`;
+    document.body.appendChild(el);
+  } else {
+    document.getElementById('db-loading-msg').textContent = msg || 'Connecting…';
+    el.style.display = 'flex';
+  }
+}
+function hideDBLoading() {
+  const el = document.getElementById('db-loading');
+  if (el) el.style.display = 'none';
+}
+
+// ─── APP BOOTSTRAP ───
+async function initAppData() {
+  showDBLoading('Connecting to Spaceó…');
+  await dbLoadSites();
+  showDBLoading('Loading workers…');
+  await dbLoadWorkers();
+  showDBLoading('Loading team…');
+  await dbLoadEngineers();
+  hideDBLoading();
+  refreshSiteDropdowns();
+  checkFirstTimeSetup();
+}
+</script>
+
 <script>
 // ─── SITE MANAGEMENT ───
 let editingSiteIndex = -1;
@@ -1811,17 +2089,12 @@ let editingSiteIndex = -1;
 function loadSites() {
   try {
     const saved = localStorage.getItem('spaceo_sites');
-    if (saved) {
-      SITES = JSON.parse(saved);
-    } else {
-      SITES = [];
-    }
+    if (saved) SITES = JSON.parse(saved);
   } catch(e) { SITES = []; }
-  refreshSiteDropdowns();
 }
 
 function saveSitesToStorage() {
-  try { localStorage.setItem('spaceo_sites', JSON.stringify(SITES)); } catch(e) {}
+  localStorage.setItem('spaceo_sites', JSON.stringify(SITES));
 }
 
 function refreshSiteDropdowns() {
@@ -1878,36 +2151,39 @@ function detectSiteLocation() {
   }, () => toast('Could not get location'));
 }
 
-function saveSite() {
-  const name = document.getElementById('sm-name').value.trim();
-  const loc = document.getElementById('sm-loc').value.trim();
-  const cap = parseInt(document.getElementById('sm-cap').value) || 10;
-  const lat = parseFloat(document.getElementById('sm-lat').value) || null;
-  const lng = parseFloat(document.getElementById('sm-lng').value) || null;
+async function saveSite() {
+  const name   = document.getElementById('sm-name').value.trim();
+  const loc    = document.getElementById('sm-loc').value.trim();
+  const cap    = parseInt(document.getElementById('sm-cap').value) || 10;
+  const lat    = parseFloat(document.getElementById('sm-lat').value) || null;
+  const lng    = parseFloat(document.getElementById('sm-lng').value) || null;
   const radius = parseInt(document.getElementById('sm-radius').value) || 300;
-
   if (!name) { toast('Please enter a site name'); return; }
-
-  const site = { name, loc, capacity: cap, lat, lng, radius };
-
-  if (editingSiteIndex === -1) {
-    SITES.push(site);
-    toast('Site added ✓');
-  } else {
-    const oldName = SITES[editingSiteIndex].name;
-    // Update any workers assigned to old name
-    if (oldName !== name) {
-      workers.forEach(w => { if (w.site === oldName) w.site = name; });
+  const btn = document.getElementById('sm-save-btn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    if (editingSiteIndex === -1) {
+      const site = { name, loc, capacity: cap, lat, lng, radius, archived: false };
+      SITES.push(site);
+      await dbSaveSite(site);
+      toast('Site added ✓');
+    } else {
+      const oldName = SITES[editingSiteIndex].name;
+      if (oldName !== name) workers.forEach(w => { if (w.site === oldName) w.site = name; });
+      Object.assign(SITES[editingSiteIndex], { name, loc, capacity: cap, lat, lng, radius });
+      await dbSaveSite(SITES[editingSiteIndex]);
+      toast('Site updated ✓');
     }
-    SITES[editingSiteIndex] = site;
-    toast('Site updated ✓');
+    saveSitesToStorage();
+    refreshSiteDropdowns();
+    renderSitesFull();
+    renderSitesOverview();
+    closeSiteModal();
+  } catch(e) {
+    toast('Save failed: ' + e.message);
   }
-
-  saveSitesToStorage();
-  refreshSiteDropdowns();
-  renderSitesFull();
-  renderSitesOverview();
-  closeSiteModal();
+  btn.disabled = false;
+  btn.textContent = editingSiteIndex === -1 ? 'Add Site →' : 'Save Changes →';
 }
 
 function archiveSite(i) {
@@ -1927,24 +2203,19 @@ function archiveSite(i) {
   }
 }
 
-function restoreSite(i) {
-  SITES[i].archived = false;
-  SITES[i].archivedAt = null;
-  saveSitesToStorage();
-  refreshSiteDropdowns();
-  renderSitesFull();
-  renderSitesOverview();
+async function restoreSite(i) {
+  SITES[i].archived = false; SITES[i].archivedAt = null;
+  try { await dbSaveSite(SITES[i]); } catch(e) { console.warn(e); }
+  saveSitesToStorage(); refreshSiteDropdowns(); renderSitesFull(); renderSitesOverview();
   toast('Site restored ✓');
 }
 
-function permanentDeleteSite(i) {
+async function permanentDeleteSite(i) {
   const s = SITES[i];
   if (!confirm(`Permanently delete "${s.name.split('—')[0].trim()}"?\n\nThis will erase all historical data and cannot be undone.`)) return;
+  try { await dbDeleteSite(s); } catch(e) { console.warn(e); }
   SITES.splice(i, 1);
-  saveSitesToStorage();
-  refreshSiteDropdowns();
-  renderSitesFull();
-  renderSitesOverview();
+  saveSitesToStorage(); refreshSiteDropdowns(); renderSitesFull(); renderSitesOverview();
   toast('Site permanently deleted');
 }
 
@@ -1969,7 +2240,7 @@ function loadWorkers() {
 }
 
 function saveWorkers() {
-  try { localStorage.setItem('spaceo_workers', JSON.stringify(workers)); } catch(e) {}
+  localStorage.setItem('spaceo_workers', JSON.stringify(workers));
 }
 
 let SITES = [];
@@ -1985,6 +2256,8 @@ let workerTableFilter = 'all';
 // ─── STARTUP ───
 loadWorkers();
 loadSites();
+// Kick off Supabase bootstrap (async — overlays screen while loading)
+initAppData();
 // Ensure all modals are hidden on load
 ['add-modal'].forEach(id => {
   const el = document.getElementById(id);
@@ -2004,6 +2277,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (summaryM) summaryM.addEventListener('click', e => { if (e.target === summaryM) summaryM.style.display = 'none'; });
   const archiveM = document.getElementById('archive-modal');
   if (archiveM) archiveM.addEventListener('click', e => { if (e.target === archiveM) closeArchiveModal(); });
+  const engModalM = document.getElementById('add-engineer-modal');
+  if (engModalM) engModalM.addEventListener('click', e => { if (e.target === engModalM) closeAddEngineerModal(); });
 });
 
 // ─── NAV ───
@@ -2163,11 +2438,240 @@ function toggleCheckin() {
   }
 }
 
-// ─── OWNER LOGIN ───
-function ownerLogin() {
-  toast('Signing in…');
-  setTimeout(() => goTo('owner-dash'), 600);
+// ─── OWNER AUTH (Supabase) ───
+let currentOwner = null;
+
+async function ownerLogin() {
+  const email = document.getElementById('owner-email').value.trim();
+  const pass  = document.getElementById('owner-pass').value;
+  const btn   = document.getElementById('owner-login-btn');
+  const err   = document.getElementById('owner-login-error');
+  err.style.display = 'none';
+  if (!email || !pass) { err.textContent = 'Enter email and password'; err.style.display = 'block'; return; }
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (error) throw error;
+    currentOwner = data.user;
+    // Load owner profile from owners table
+    const { data: profile } = await sb.from('owners').select('*').eq('id', data.user.id).single();
+    if (profile) {
+      document.getElementById('owner-display-name').textContent = profile.name || email;
+      document.getElementById('owner-display-role').textContent = profile.role || 'Owner';
+      document.getElementById('settings-name').value  = profile.name || '';
+      document.getElementById('settings-email').value = email;
+    }
+    toast('Welcome back ✓');
+    goTo('owner-dash');
+  } catch(e) {
+    err.textContent = e.message.includes('Invalid') ? 'Incorrect email or password' : e.message;
+    err.style.display = 'block';
+  }
+  btn.disabled = false; btn.textContent = 'Sign in →';
 }
+
+async function createOwnerAccount() {
+  const name  = document.getElementById('setup-name').value.trim();
+  const email = document.getElementById('setup-email').value.trim();
+  const pass  = document.getElementById('setup-pass').value;
+  const pass2 = document.getElementById('setup-pass2').value;
+  const err   = document.getElementById('setup-error');
+  err.style.display = 'none';
+  if (!name || !email || !pass) { err.textContent = 'All fields required'; err.style.display = 'block'; return; }
+  if (pass !== pass2) { err.textContent = 'Passwords do not match'; err.style.display = 'block'; return; }
+  if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters'; err.style.display = 'block'; return; }
+  try {
+    const { data, error } = await sb.auth.signUp({ email, password: pass });
+    if (error) throw error;
+    // Store owner profile
+    await sb.from('owners').insert({ id: data.user.id, name, email, role: 'Owner' });
+    toast('Account created! Check your email to confirm.');
+    goTo('owner-login');
+  } catch(e) {
+    err.textContent = e.message;
+    err.style.display = 'block';
+  }
+}
+
+async function sendPasswordReset() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const msg   = document.getElementById('forgot-msg');
+  if (!email) { msg.style.cssText = 'display:block;color:var(--c-red);font-size:12px;'; msg.textContent = 'Enter your email'; return; }
+  try {
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://spaceo-workforce.vercel.app/'
+    });
+    if (error) throw error;
+    msg.style.cssText = 'display:block;color:var(--c-green);font-size:12px;';
+    msg.textContent = '✓ Reset link sent — check your email';
+  } catch(e) {
+    msg.style.cssText = 'display:block;color:var(--c-red);font-size:12px;';
+    msg.textContent = e.message;
+  }
+}
+
+async function saveOwnerSettings() {
+  const name  = document.getElementById('settings-name').value.trim();
+  const email = document.getElementById('settings-email').value.trim();
+  const pass  = document.getElementById('settings-pass').value;
+  const pass2 = document.getElementById('settings-pass2').value;
+  if (!name) { toast('Enter your name'); return; }
+  if (pass && pass !== pass2) { toast('Passwords do not match'); return; }
+  if (pass && pass.length < 6) { toast('Password must be at least 6 characters'); return; }
+  try {
+    if (pass) { const { error } = await sb.auth.updateUser({ password: pass }); if (error) throw error; }
+    if (currentOwner) {
+      await sb.from('owners').upsert({ id: currentOwner.id, name, email, role: 'Owner' });
+    }
+    document.getElementById('owner-display-name').textContent = name;
+    document.getElementById('settings-pass').value  = '';
+    document.getElementById('settings-pass2').value = '';
+    toast('Settings saved ✓');
+  } catch(e) { toast('Error: ' + e.message); }
+}
+
+// ─── TEAM / ENGINEER MANAGEMENT ───
+let editingEngineerIndex = -1;
+
+function showAddEngineerModal(editIdx = -1) {
+  editingEngineerIndex = editIdx;
+  const isEdit = editIdx >= 0;
+  document.getElementById('eng-modal-title').textContent = isEdit ? 'Edit Engineer' : 'Add Site Engineer';
+  document.getElementById('ae-save-btn').textContent     = isEdit ? 'Save Changes →' : 'Add Engineer →';
+  if (isEdit) {
+    const e = engineers[editIdx];
+    document.getElementById('ae-name').value  = e.name;
+    document.getElementById('ae-email').value = e.id;
+    document.getElementById('ae-pass').value  = '';
+  } else {
+    document.getElementById('ae-name').value  = '';
+    document.getElementById('ae-email').value = '';
+    document.getElementById('ae-pass').value  = '';
+  }
+  // Populate sites checkboxes
+  const sitesList = document.getElementById('ae-sites-list');
+  if (SITES.filter(s => !s.archived).length === 0) {
+    sitesList.innerHTML = '<div style="font-size:12px;color:var(--c-gray-400);">No active sites — add sites first.</div>';
+  } else {
+    sitesList.innerHTML = SITES.filter(s => !s.archived).map((s, i) => {
+      const realIdx = SITES.indexOf(s);
+      const checked = isEdit && engineers[editIdx].siteIndices.includes(realIdx);
+      return `<label style="display:flex;align-items:center;gap:10px;padding:6px 0;cursor:pointer;font-size:13px;">
+        <input type="checkbox" value="${realIdx}" ${checked ? 'checked' : ''} style="width:16px;height:16px;accent-color:var(--c-green);cursor:pointer;">
+        ${s.name.split('—')[0].trim()} <span style="font-size:11px;color:var(--c-gray-400);">${s.loc||''}</span>
+      </label>`;
+    }).join('');
+  }
+  document.getElementById('ae-error').style.display = 'none';
+  document.getElementById('add-engineer-modal').style.display = 'flex';
+}
+
+function closeAddEngineerModal() {
+  document.getElementById('add-engineer-modal').style.display = 'none';
+}
+
+async function saveEngineer() {
+  const name  = document.getElementById('ae-name').value.trim();
+  const email = document.getElementById('ae-email').value.trim();
+  const pass  = document.getElementById('ae-pass').value;
+  const err   = document.getElementById('ae-error');
+  err.style.display = 'none';
+  if (!name || !email) { err.textContent = 'Name and email required'; err.style.display = 'block'; return; }
+  // Get selected site indices
+  const checked = [...document.querySelectorAll('#ae-sites-list input[type=checkbox]:checked')];
+  const siteIndices = checked.map(cb => parseInt(cb.value));
+  const siteIds = siteIndices.map(i => SITES[i]?._id).filter(Boolean);
+  const btn = document.getElementById('ae-save-btn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    if (editingEngineerIndex === -1) {
+      // New engineer — create Supabase auth account
+      if (!pass) { err.textContent = 'Set a password for this engineer'; err.style.display = 'block'; btn.disabled = false; btn.textContent = 'Add Engineer →'; return; }
+      const { data, error } = await sb.auth.admin ? 
+        { data: null, error: { message: 'Use service role for admin creation' } } :
+        { data: null, error: null }; // Will use engineers table directly
+      // Store in engineers table (auth handled separately or via invite)
+      const { error: dbErr } = await sb.from('engineers').insert({
+        email, pass, name, site_ids: siteIds
+      });
+      if (dbErr) throw dbErr;
+      engineers.push({ id: email, pass, name, siteIndices, _id: null });
+      toast(name + ' added ✓');
+    } else {
+      const eng = engineers[editingEngineerIndex];
+      const row = { email, name, site_ids: siteIds };
+      if (pass) row.pass = pass;
+      const { error } = await sb.from('engineers').update(row).eq('email', eng.id);
+      if (error) throw error;
+      eng.id = email; eng.name = name; eng.siteIndices = siteIndices;
+      if (pass) eng.pass = pass;
+      toast(name + ' updated ✓');
+    }
+    localStorage.setItem('spaceo_engineers', JSON.stringify(engineers));
+    closeAddEngineerModal();
+    renderEngineersList();
+  } catch(e) {
+    err.textContent = e.message;
+    err.style.display = 'block';
+  }
+  btn.disabled = false;
+}
+
+async function deleteEngineer(i) {
+  const e = engineers[i];
+  if (!confirm(`Remove ${e.name} from the system?`)) return;
+  try {
+    await sb.from('engineers').delete().eq('email', e.id);
+    engineers.splice(i, 1);
+    localStorage.setItem('spaceo_engineers', JSON.stringify(engineers));
+    renderEngineersList();
+    toast(e.name + ' removed');
+  } catch(err) { toast('Error: ' + err.message); }
+}
+
+function renderEngineersList() {
+  const list = document.getElementById('engineers-list');
+  if (!list) return;
+  if (engineers.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:60px 24px;background:#fff;border-radius:var(--radius);border:1px solid var(--c-gray-200);">
+      <div style="font-size:40px;margin-bottom:12px;">👷</div>
+      <div style="font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:8px;">No engineers yet</div>
+      <div style="font-size:13px;color:var(--c-gray-400);margin-bottom:20px;">Add site engineers to give them access to their sites.</div>
+      <button onclick="showAddEngineerModal()" style="padding:12px 24px;background:var(--c-black);color:#fff;border:none;border-radius:var(--radius-sm);font-family:var(--font-head);font-size:14px;font-weight:700;cursor:pointer;">+ Add Engineer</button>
+    </div>`;
+    return;
+  }
+  list.innerHTML = engineers.map((e, i) => {
+    const siteNames = e.siteIndices.map(idx => SITES[idx]?.name.split('—')[0].trim()).filter(Boolean);
+    return `<div class="panel" style="margin-bottom:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div style="width:44px;height:44px;border-radius:50%;background:#D97706;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:15px;font-weight:800;color:#fff;flex-shrink:0;">${e.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;font-size:14px;">${e.name}</div>
+        <div style="font-size:12px;color:var(--c-gray-400);">${e.id}</div>
+        <div style="font-size:11px;color:var(--c-green);margin-top:3px;">${siteNames.length ? '📍 ' + siteNames.join(' · ') : 'No sites assigned'}</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0;">
+        <button onclick="showAddEngineerModal(${i})" style="padding:6px 14px;background:var(--c-gray-100);border:1px solid var(--c-gray-200);border-radius:8px;font-size:12px;font-family:var(--font-body);cursor:pointer;">Edit</button>
+        <button onclick="deleteEngineer(${i})" style="padding:6px 14px;background:var(--c-red-light);border:1px solid #FECACA;border-radius:8px;font-size:12px;font-family:var(--font-body);color:var(--c-red);cursor:pointer;">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Check if first-time setup needed on app load
+async function checkFirstTimeSetup() {
+  try {
+    const { data } = await sb.from('owners').select('id').limit(1);
+    if (!data || data.length === 0) {
+      // No owner exists — show setup
+      setTimeout(() => {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('first-setup').classList.add('active');
+      }, 500);
+    }
+  } catch(e) { /* table doesn't exist yet — skip */ }
+}
+
 
 // ═══════════════════════════════════════════════
 // ─── SITE ENGINEER SYSTEM ───────────────────────
@@ -2408,14 +2912,13 @@ function renderEngAttendance() {
   }).join('');
 }
 
-function manualStatus(workerIndex, newStatus) {
+async function manualStatus(workerIndex, newStatus) {
   workers[workerIndex].status = newStatus;
   if (newStatus === 'In' && !workers[workerIndex].in) {
     workers[workerIndex].in = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
   }
-  saveWorkers();
-  renderEngAttendance();
-  renderEngOverview();
+  try { await dbSaveWorker(workers[workerIndex]); } catch(e) { console.warn(e); }
+  saveWorkers(); renderEngAttendance(); renderEngOverview();
   toast(workers[workerIndex].name + ' marked ' + newStatus);
 }
 
@@ -2437,15 +2940,14 @@ function closeNoteModal() {
   document.getElementById('worker-note-modal').style.display = 'none';
 }
 
-function saveWorkerNote() {
+async function saveWorkerNote() {
   const text = document.getElementById('note-text').value.trim();
   const flag = document.getElementById('note-flag').value;
-  if (!text) { workers[notingWorkerIndex].note = null; }
-  else { workers[notingWorkerIndex].note = { text, flag, time: new Date().toISOString() }; }
-  saveWorkers();
-  closeNoteModal();
-  renderEngWorkers();
-  renderEngAttendance();
+  const w    = workers[notingWorkerIndex];
+  w.note     = text ? { text, flag, time: new Date().toISOString() } : null;
+  try { await dbSaveWorker(w); } catch(e) { console.warn(e); }
+  saveWorkers(); closeNoteModal();
+  renderEngWorkers(); renderEngAttendance();
   toast(text ? 'Note saved ✓' : 'Note cleared');
 }
 
@@ -2596,7 +3098,7 @@ function engPhotoSelected(input) {
   reader.readAsDataURL(file);
 }
 
-function engAddWorker() {
+async function engAddWorker() {
   const first = document.getElementById('eng-new-first').value.trim();
   const last  = document.getElementById('eng-new-last').value.trim();
   const role  = document.getElementById('eng-new-role').value;
@@ -2605,12 +3107,11 @@ function engAddWorker() {
   if (!pin || pin.length !== 4) { toast('PIN must be 4 digits'); return; }
   const site = getActiveSite();
   if (!site) { toast('No site assigned to you'); return; }
-  workers.push({ name: first+' '+last, role, site: site.name, in:'', hours:0, status:'Absent', pin, photo: engNewPhotoData||null });
-  saveWorkers();
-  refreshSiteDropdowns();
-  closeEngAddWorker();
-  renderEngWorkers();
-  renderEngOverview();
+  const w = { name: first+' '+last, role, site: site.name, in:'', hours:0, status:'Absent', pin, photo: engNewPhotoData||null };
+  workers.push(w);
+  try { await dbSaveWorker(w); } catch(e) { console.warn(e); }
+  saveWorkers(); refreshSiteDropdowns(); closeEngAddWorker();
+  renderEngWorkers(); renderEngOverview();
   toast(first+' '+last+' added ✓');
 }
 
@@ -2621,8 +3122,9 @@ function promptUploadPhoto(workerIndex) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = ev => {
+    reader.onload = async ev => {
       workers[workerIndex].photo = ev.target.result;
+      try { await dbSaveWorker(workers[workerIndex]); } catch(e) { console.warn(e); }
       saveWorkers();
       renderEngWorkers();
       toast('Photo saved ✓');
@@ -2926,24 +3428,20 @@ function closeArchiveModal() {
   document.getElementById('archive-modal').style.display = 'none';
 }
 
-function confirmArchive() {
+async function confirmArchive() {
   const i       = archivingSiteIndex;
   const s       = SITES[i];
   const newSite = document.getElementById('archive-reassign-site').value;
   // Reassign workers
-  workers.forEach(w => {
-    if (w.site === s.name) w.site = newSite || '';
-  });
+  const toUpdate = workers.filter(w => w.site === s.name);
+  toUpdate.forEach(w => { w.site = newSite || ''; });
+  try { await Promise.all(toUpdate.map(w => dbSaveWorker(w))); } catch(e) { console.warn(e); }
   saveWorkers();
   // Archive the site
-  SITES[i].archived   = true;
-  SITES[i].archivedAt = new Date().toISOString();
-  saveSitesToStorage();
-  refreshSiteDropdowns();
-  closeArchiveModal();
-  renderSitesFull();
-  renderSitesOverview();
-  updateDashStats();
+  SITES[i].archived = true; SITES[i].archivedAt = new Date().toISOString();
+  try { await dbSaveSite(SITES[i]); } catch(e) { console.warn(e); }
+  saveSitesToStorage(); refreshSiteDropdowns(); closeArchiveModal();
+  renderSitesFull(); renderSitesOverview(); updateDashStats();
   toast(`${s.name.split('—')[0].trim()} archived ✓`);
 }
 
@@ -3118,8 +3616,12 @@ function showDashTab(tab, el) {
   if (el) el.classList.add('active');
   if (tab === 'workers')   renderWorkersTable(workerTableFilter);
   if (tab === 'reports') { renderTopWorkers(); renderWeeklyChart(); }
-  if (tab === 'sites') renderSitesFull();
+  if (tab === 'sites')   renderSitesFull();
   if (tab !== 'workers') clearBulkSelection();
+  if (tab === 'team')     renderEngineersList();
+  if (tab === 'settings') {
+    if (currentOwner) document.getElementById('settings-email').value = currentOwner.email || '';
+  }
 }
 
 // ─── ADD WORKER MODAL ───
@@ -3129,22 +3631,23 @@ function showAddModal() {
 function closeAddModal() {
   document.getElementById('add-modal').classList.remove('show');
 }
-function addWorker() {
+async function addWorker() {
   const first = document.getElementById('new-first').value.trim();
-  const last = document.getElementById('new-last').value.trim();
-  const role = document.getElementById('new-role').value;
-  const site = document.getElementById('new-site').value;
-  const pin = document.getElementById('new-pin').value.trim();
+  const last  = document.getElementById('new-last').value.trim();
+  const role  = document.getElementById('new-role').value;
+  const site  = document.getElementById('new-site').value;
+  const pin   = document.getElementById('new-pin').value.trim();
   if (!first || !last) { toast('Enter worker name'); return; }
   if (pin.length !== 4) { toast('PIN must be 4 digits'); return; }
-  workers.push({name: first+' '+last, role, site, in:'', hours:0, status:'Absent', pin});
-  saveWorkers();
-  closeAddModal();
+  const w = { name: first+' '+last, role, site, in:'', hours:0, status:'Absent', pin, photo:null };
+  workers.push(w);
+  try { await dbSaveWorker(w); } catch(e) { console.warn(e); }
+  saveWorkers(); closeAddModal();
   toast(first+' added successfully');
   initDash();
   document.getElementById('new-first').value = '';
-  document.getElementById('new-last').value = '';
-  document.getElementById('new-pin').value = '';
+  document.getElementById('new-last').value  = '';
+  document.getElementById('new-pin').value   = '';
 }
 
 
@@ -3152,15 +3655,14 @@ function addWorker() {
 // ─── WORKER EDIT / DELETE ───
 let editingWorkerIndex = -1;
 
-function deleteWorker(i) {
+async function deleteWorker(i) {
   const w = workers[i];
   if (!confirm(`Remove ${w.name} from the system?`)) return;
+  try { await dbDeleteWorker(w); } catch(e) { console.warn(e); }
   workers.splice(i, 1);
   saveWorkers();
   renderWorkersTable(workerTableFilter);
-  updateDashStats();
-  renderLiveWorkers();
-  renderSitesOverview();
+  updateDashStats(); renderLiveWorkers(); renderSitesOverview();
   toast(w.name + ' removed');
 }
 
@@ -3181,23 +3683,21 @@ function closeEditWorkerModal() {
   document.getElementById('edit-worker-modal').style.display = 'none';
 }
 
-function saveEditWorker() {
+async function saveEditWorker() {
   const first = document.getElementById('ew-first').value.trim();
-  const last = document.getElementById('ew-last').value.trim();
-  const role = document.getElementById('ew-role').value;
-  const site = document.getElementById('ew-site').value;
-  const pin = document.getElementById('ew-pin').value.trim();
+  const last  = document.getElementById('ew-last').value.trim();
+  const role  = document.getElementById('ew-role').value;
+  const site  = document.getElementById('ew-site').value;
+  const pin   = document.getElementById('ew-pin').value.trim();
   if (!first || !last) { toast('Enter worker name'); return; }
   if (pin && pin.length !== 4) { toast('PIN must be 4 digits'); return; }
-  const w = workers[editingWorkerIndex];
-  w.name = first + ' ' + last;
-  w.role = role;
-  w.site = site;
+  const w  = workers[editingWorkerIndex];
+  w.name   = first + ' ' + last;
+  w.role   = role; w.site = site;
   if (pin) w.pin = pin;
-  saveWorkers();
-  closeEditWorkerModal();
-  renderWorkersTable(workerTableFilter);
-  updateDashStats();
+  try { await dbSaveWorker(w); } catch(e) { console.warn(e); }
+  saveWorkers(); closeEditWorkerModal();
+  renderWorkersTable(workerTableFilter); updateDashStats();
   toast(w.name + ' updated ✓');
 }
 
