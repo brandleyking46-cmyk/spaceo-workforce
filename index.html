@@ -42,8 +42,37 @@ html, body { height: 100%; }
 body { font-family: var(--font-body); background: var(--c-gray-50); color: var(--c-black); overflow-x: hidden; }
 
 /* ─── VIEW SYSTEM ─── */
-.view { display: none; min-height: 100vh; }
-.view.active { display: flex; flex-direction: column; }
+.view { display: none; min-height: 100vh; width: 100%; }
+.view.active { display: flex !important; flex-direction: column; }
+
+/* Scroll-screen views are always visible inside the snap container */
+.scroll-screen { display: flex !important; flex-direction: column; }
+
+html, body { height: 100%; overflow: hidden; }
+
+/* ─── SCROLL CONTAINER ─── */
+#view-scroll {
+  position: fixed;
+  inset: 0;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+#view-scroll::-webkit-scrollbar { display: none; }
+
+/* Each screen inside the scroll container */
+.scroll-screen {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100vh;
+  width: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Hide the scroll container when a non-scroll view is active */
+body.dash-mode #view-scroll { display: none; }
 
 /* ─── LANDING ─── */
 #landing {
@@ -1175,6 +1204,9 @@ tbody tr:hover td { background: var(--c-gray-50); }
 </head>
 <body>
 
+<!-- ═══ SCROLL CONTAINER (Landing + Login screens) ═══ -->
+<div id="view-scroll">
+
 <!-- ═══ LANDING ═══ -->
 
 <!-- PWA Install Banner -->
@@ -1185,7 +1217,7 @@ tbody tr:hover td { background: var(--c-gray-50); }
   <button id="pwa-dismiss-btn">×</button>
 </div>
 
-<div id="landing" class="view active">
+<div id="landing" class="view active scroll-screen">
   <div class="land-wordmark"><span class="red">S</span>PACEÓ</div>
   <div class="land-tagline">Interiors LLC · Dubai</div>
 
@@ -1235,7 +1267,7 @@ tbody tr:hover td { background: var(--c-gray-50); }
 </div>
 
 <!-- ═══ WORKER LOGIN ═══ -->
-<div id="worker-login" class="view">
+<div id="worker-login" class="view scroll-screen">
   <div class="wl-hero">
     <button class="wl-back" onclick="goTo('landing')">← Back</button>
     <div class="wl-hero-text">
@@ -1337,7 +1369,7 @@ tbody tr:hover td { background: var(--c-gray-50); }
 </div>
 
 <!-- ═══ OWNER LOGIN ═══ -->
-<div id="owner-login" class="view">
+<div id="owner-login" class="view scroll-screen">
   <div class="ol-card">
     <div class="ol-logo"><span>S</span>PACEÓ</div><div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:4px;">INTERIORS LLC</div>
     <div class="ol-sub">Owner & Manager Portal</div>
@@ -1357,7 +1389,7 @@ tbody tr:hover td { background: var(--c-gray-50); }
 
 
 <!-- ═══ ENGINEER LOGIN ═══ -->
-<div id="engineer-login" class="view">
+<div id="engineer-login" class="view scroll-screen">
   <div class="ol-card">
     <div class="ol-logo"><span>S</span>PACEÓ</div>
     <div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:4px;">INTERIORS LLC</div>
@@ -1370,6 +1402,8 @@ tbody tr:hover td { background: var(--c-gray-50); }
     <div class="ol-hint">← <span style="cursor:pointer;color:var(--c-green);" onclick="goTo('landing')">Back to home</span></div>
   </div>
 </div>
+
+</div><!-- END #view-scroll -->
 
 <!-- ═══ ENGINEER DASHBOARD ═══ -->
 <div id="engineer-dash" class="view">
@@ -1977,7 +2011,7 @@ tbody tr:hover td { background: var(--c-gray-50); }
 </div>
 
 <!-- ═══ FIRST TIME SETUP ═══ -->
-<div id="first-setup" class="view">
+<div id="first-setup" class="view scroll-screen">
   <div class="ol-card" style="max-width:420px;">
     <div class="ol-logo"><span>S</span>PACEÓ</div>
     <div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:8px;">INTERIORS LLC</div>
@@ -1998,7 +2032,7 @@ tbody tr:hover td { background: var(--c-gray-50); }
 </div>
 
 <!-- ═══ FORGOT PASSWORD ═══ -->
-<div id="forgot-password" class="view">
+<div id="forgot-password" class="view scroll-screen">
   <div class="ol-card">
     <div class="ol-logo"><span>S</span>PACEÓ</div>
     <div style="font-size:11px;color:var(--c-gray-400);letter-spacing:0.12em;margin-bottom:16px;">INTERIORS LLC</div>
@@ -2012,7 +2046,9 @@ tbody tr:hover td { background: var(--c-gray-50); }
   </div>
 </div>
 
-<!-- ADD ENGINEER MODAL -->
+</div><!-- END #view-scroll -->
+
+<!-- ═══ ENGINEER DASHBOARD ═══ -->
 <div id="add-engineer-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;padding:24px;">
   <div class="modal-card" style="max-width:480px;max-height:90vh;overflow-y:auto;">
     <div class="modal-title" id="eng-modal-title">Add Site Engineer</div>
@@ -2473,12 +2509,37 @@ function closeStaffSheet(e) {
 }
 
 // ─── NAV ───
+// ─── NAVIGATION ───
+const SCROLL_SCREENS = ['landing','worker-login','owner-login','engineer-login','first-setup','forgot-password'];
+
 function goTo(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (id === 'owner-dash')    { initDash(); }
-  if (id === 'engineer-dash') { initEngDash(); }
-  if (id === 'worker-checkin') { startClock(); detectGPS(); }
+  const isScrollScreen = SCROLL_SCREENS.includes(id);
+
+  if (isScrollScreen) {
+    // Show scroll container, hide dash views
+    document.body.classList.remove('dash-mode');
+    document.querySelectorAll('.view:not(.scroll-screen)').forEach(v => {
+      v.classList.remove('active');
+    });
+    // Scroll to the target screen smoothly
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  } else {
+    // Dash/complex view — hide scroll container, show the view
+    document.body.classList.add('dash-mode');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const next = document.getElementById(id);
+    if (next) next.classList.add('active');
+    window.scrollTo(0, 0);
+
+    if (id === 'owner-dash')     initDash();
+    if (id === 'engineer-dash')  initEngDash();
+    if (id === 'worker-checkin') { startClock(); detectGPS(); }
+  }
+
+  // Side effects
   const engNav = document.getElementById('eng-mobile-nav');
   if (engNav) engNav.style.display = id === 'engineer-dash' ? 'flex' : 'none';
   if (id !== 'owner-dash' && aiOpen) toggleAI();
