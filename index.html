@@ -3219,14 +3219,37 @@ function renderEngWorkers() {
 function renderEngGeofence() {
   const site   = getActiveSite();
   const status = document.getElementById('eng-geo-status');
-  if (!site) { if(status) status.textContent='No site assigned.'; return; }
+  const geoName = document.getElementById('eng-geo-site-name');
+
+  if (!site) {
+    if (status) status.innerHTML = `<div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:14px;color:#92400E;font-size:13px;line-height:1.6;">
+      <strong>⚠ No site assigned to your account.</strong><br>
+      Ask your owner/manager to assign you to a site from the <strong>Team / Engineers</strong> section before you can configure geofencing.
+    </div>`;
+    if (geoName) geoName.textContent = 'No site assigned';
+    // Hide the input fields
+    ['eng-lat','eng-lng','eng-radius'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.closest('div').style.display = 'none';
+    });
+    return;
+  }
+
+  // Show input fields
+  ['eng-lat','eng-lng','eng-radius'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.closest('div').style.display = '';
+  });
+
+  if (geoName) geoName.textContent = site.name.split('—')[0].trim();
+
   if (site.lat && site.lng) {
-    status.innerHTML = `<span style="color:var(--c-green);font-weight:600;">✓ Geofence active</span> — ${Number(site.lat).toFixed(5)}, ${Number(site.lng).toFixed(5)} · Radius: ${site.radius||300}m`;
+    if (status) status.innerHTML = `<span style="color:var(--c-green);font-weight:600;">✓ Geofence active</span> — ${Number(site.lat).toFixed(5)}, ${Number(site.lng).toFixed(5)} · Radius: ${site.radius||300}m`;
     document.getElementById('eng-lat').value    = site.lat;
     document.getElementById('eng-lng').value    = site.lng;
-    document.getElementById('eng-radius').value = site.radius||300;
+    document.getElementById('eng-radius').value = site.radius || 300;
   } else {
-    status.innerHTML = '<span style="color:var(--c-amber);font-weight:600;">⚠ No geofence set</span> — workers can check in from anywhere.';
+    if (status) status.innerHTML = '<span style="color:var(--c-amber);font-weight:600;">⚠ No geofence set</span> — workers can check in from anywhere.';
     document.getElementById('eng-lat').value    = '';
     document.getElementById('eng-lng').value    = '';
     document.getElementById('eng-radius').value = '';
